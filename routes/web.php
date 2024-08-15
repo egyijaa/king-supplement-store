@@ -78,6 +78,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin'])->group(f
         Route::get('', [SupplyController::class, 'index'])->name('index');
         Route::get('addProduct', [SupplyController::class, 'addProduct'])->name('addProduct');
         Route::post('storeProduct', [SupplyController::class, 'storeProduct'])->name('storeProduct');
+        Route::post('storeNewProduct', [SupplyController::class, 'storeNewProduct'])->name('storeNewProduct');
         Route::delete('deleteProduct/{id}', [SupplyController::class, 'deleteProduct'])->name('deleteProduct');
         Route::post('storeSupply', [SupplyController::class, 'storeSupply'])->name('storeSupply');
         Route::delete('delete', [SupplyController::class, 'delete'])->name('delete');

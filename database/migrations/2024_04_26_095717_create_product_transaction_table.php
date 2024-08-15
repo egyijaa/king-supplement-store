@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('transaction_id')->nullable()->references('id')->on('transaction')->onDelete('cascade');
             $table->foreignId('product_id')->references('id')->on('product')->onDelete('cascade');
             $table->string('quantity');
+            $table->string('price');
             $table->enum('status',['0','1']);
             $table->string('disc_rp')->nullable();
             $table->string('disc_prc')->nullable();

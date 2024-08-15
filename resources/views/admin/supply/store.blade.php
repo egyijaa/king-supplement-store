@@ -35,14 +35,6 @@
                                     @endforeach
                                 </select>
                         </div>
-                        <div class="col-4 mt-4">
-                            <label>
-                                <input type="radio" name="is_ppn" id="is_ppn" value="1" checked>PPN 11%
-                            </label> |
-                            <label>
-                                <input type="radio" name="is_ppn" id="is_ppn" value="0">Tanpa PPN
-                            </label>
-                        </div>
                     </div>
                     <div class="row">
                         <div class="col-3">
@@ -72,7 +64,6 @@
                                 <td><b>Hrg Beli Satuan <hr> Keuntungan</b> </td>
                                 <td><b>Qty</b></td>
                                 <td><b>Hrg Beli Total</b></td>
-                                <td><b>PPN 11%?</b></td>
                                 <td><b>Action</b></td>
                             </tr>
                         </thead>
@@ -103,14 +94,7 @@
                                     @endphp
                                 <td>@currency($ps->total_price)</td>
                                 <td>
-                                    @if ($ps->is_ppn == 1)
-                                        <span class="badge badge-success">Yes</span>
-                                    @else
-                                        <span class="badge badge-warning">No</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="#" data-idproductsupply="{{ $ps->id }}" data-qtyproductsupply="{{ $ps->quantity }}" data-totalpricesupply="{{ $ps->total_price }}" data-differencesupply="{{ $difference }}" data-isppn="{{ $ps->is_ppn }}" data-idproduct="{{ $ps->product->id }}" data-nameproduct="{{ $ps->product->name }}" data-codeproduct="{{ $ps->product->product_code }}" data-qtyproduct="{{ $ps->product->quantity }}" data-priceproduct="{{ $ps->product->price }}" data-capitalpriceproduct="{{ $ps->product->capital_price }}" data-toggle="modal" data-target="#editProductSupply">
+                                    <a href="#" data-idproductsupply="{{ $ps->id }}" data-qtyproductsupply="{{ $ps->quantity }}" data-totalpricesupply="{{ $ps->total_price }}" data-differencesupply="{{ $difference }}" data-idproduct="{{ $ps->product->id }}" data-nameproduct="{{ $ps->product->name }}" data-codeproduct="{{ $ps->product->product_code }}" data-qtyproduct="{{ $ps->product->quantity }}" data-priceproduct="{{ $ps->product->price }}" data-capitalpriceproduct="{{ $ps->product->capital_price }}" data-toggle="modal" data-target="#editProductSupply">
                                         <button class="btn btn-danger btn-sm">
                                             <i class="fa fa-edit"></i>
                                         </button>
@@ -159,15 +143,15 @@
     </div>
   </div>
 
-<div class="modal fade" id="tambah" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+  <div class="modal fade" id="tambah" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
 
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form action="{{ route('admin.product.store') }}" method="POST">
+            <form action="{{ route('admin.supply.storeNewProduct') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id">
                 <div class="modal-header">
-                    <h5 class="modal-title"><span>Tambah</span> Data Produk</h5>
+                    <h5 class="modal-title"><span>Tambah</span> Data Produk Baru</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -209,21 +193,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="category_item_id">Kategori Item</label>
-                        <select name="category_item_id" id="category_item_id" class="custom-select @error('category_item_id') is-invalid @enderror">
-                            <option value="">~ Pilih Kategori Item ~</option>
-                            @foreach($category_items as $cii)
-                                <option value="{{ $cii->id }}">{{ $cii->category_item }}</option>
-                            @endforeach
-                        </select>
-                        @error('category_item_id')
-                        <div class="invalid-feedback">
-                            {{$message}}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity">Jumlah</label>
+                        <label for="quantity">Qty</label>
                         <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="0" required autocomplete="off">
                         @error('quantity')
                         <div class="invalid-feedback">
@@ -232,7 +202,16 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="price">Harga</label>
+                        <label for="price">Harga Modal</label>
+                        <input type="number" class="form-control @error('price') is-invalid @enderror" id="capitalprice" name="capital_price" value="{{ old('capital_price') }}" required autocomplete="off">
+                        @error('price')
+                        <div class="invalid-feedback">
+                            {{$message}}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Harga Jual</label>
                         <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price') }}" required autocomplete="off">
                         @error('price')
                         <div class="invalid-feedback">
@@ -348,20 +327,6 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-2">
-                            <div class="form-group">
-                                <label for="is_PPN">PPN 11%?</label>
-                                <select name="isPPN" id="isPPN" class="custom-select @error('isPPN') is-invalid @enderror">
-                                    <option value="1">Ya</option>
-                                    <option value="0">Tidak</option>
-                                </select>
-                                @error('isPPN')
-                                <div class="invalid-feedback">
-                                    {{$message}}
-                                </div>
-                                @enderror
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -386,7 +351,6 @@
         var qtyProductSupply = $(e.relatedTarget).data('qtyproductsupply');
         var totalPriceSupply = $(e.relatedTarget).data('totalpricesupply');
         var differenceSupply = $(e.relatedTarget).data('differencesupply');
-        var isPPN = $(e.relatedTarget).data('isppn');
 
         var idProduct = $(e.relatedTarget).data('idproduct');
         var nameProduct = $(e.relatedTarget).data('nameproduct');
@@ -398,7 +362,6 @@
         $('#editProductSupply').find('input[name="idProductSupply"]').val(idProductSupply);
         $('#editProductSupply').find('input[name="qtyProductSupply"]').val(qtyProductSupply);
         $('#editProductSupply').find('input[name="totalPriceSupply"]').val(totalPriceSupply);
-        $('#editProductSupply').find('select[name="isPPN"]').val(isPPN);
         
         $('#editProductSupply').find('input[name="idProduct"]').val(idProduct);
         $('#editProductSupply').find('input[name="codeProduct"]').val(codeproduct);

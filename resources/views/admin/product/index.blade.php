@@ -22,17 +22,8 @@
                             <input type="text" id="search_product" name="search_product" value="{{Request::get('search_product')}}" class="form-control" autofocus>
                         </div>
                         <div class="col-3">
-                            <label for="search_product">Cari Kategori Item:</label>
-                            <select name="category_item_search" id="category_item_search" class="custom-select">
-                                <option value="">~ Pilih Kategori Item ~</option>
-                                @foreach($category_items as $ci)
-                                    <option value="{{ $ci->category_item }}" {{ Request::get('category_item_search') == $ci->category_item ? 'selected' : '' }}>{{ $ci->category_item }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-3">
                             <label for="search_product">Cari Kategori:</label>
-                            <select name="category_search" id="category_search" class="custom-select">
+                            <select name="category_search" id="category_search" class="custom-select form-control">
                                 <option value="">~ Pilih Kategori ~</option>
                                 @foreach($categories as $c)
                                     <option value="{{ $c->name }}" {{ Request::get('category_search') == $c->name ? 'selected' : '' }}>{{ $c->name }}</option>
@@ -43,9 +34,7 @@
                             <input type="submit" value="Cari" class="btn btn-primary text-white">
                         </div>
                 </div>
-            @if (Request::get('category_item_search'))
-            <p>Menampilkan Pencarian Kategori Item : <b>{{ Request::get('category_item_search') }}</b></p>
-            @elseif (Request::get('category_search'))
+            @if (Request::get('category_search'))
             <p>Menampilkan Pencarian Kategori : <b>{{ Request::get('category_search') }}</b></p>
             @endif
             </form>
@@ -74,7 +63,6 @@
                       </td>
                     <td> Harga Jual</td>
                     <td style="width: 10%">Kategori</td>
-                    <td>Kategori Item</td>
                     <td>
                       Aksi
                     </td>
@@ -93,10 +81,9 @@
                       <td style="color: Orange"><b>@currency($product->capital_price)</b></td>
                       <td><b>@currency($product->price)</b></td>
                       <td>{{ $product->category->name }}</td>
-                      <td>{{ $product->categoryItem->category_item }}</td>
                       <td>
                           <a href="#" data-id="{{ $product->id }}" data-name="{{ $product->name }}"
-                            data-code="{{ $product->product_code }}" data-quantity="{{ $product->quantity }}" data-price="{{ $product->price }}" data-category="{{ $product->category_id }}" data-categoryitem="{{ $product->category_item_id }}" data-capitalprice="{{ $product->capital_price }}"  data-toggle="modal" data-target="#edit"><i class="fas fa-edit"></i></a>
+                            data-code="{{ $product->product_code }}" data-quantity="{{ $product->quantity }}" data-price="{{ $product->price }}" data-category="{{ $product->category_id }}" data-capitalprice="{{ $product->capital_price }}"  data-toggle="modal" data-target="#edit"><i class="fas fa-edit"></i></a>
                           <a href="#" data-target="#delete" data-toggle="modal" data-id="{{ $product->id }}" data-name="{{ $product->name }}"><i class="fas fa-trash"></i></a>
                       </td>
                   </tr>
@@ -158,20 +145,6 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="category_item_id_edit">Kategori Item</label>
-                        <select name="category_item_id" id="category_item_id" class="custom-select @error('category_item_id') is-invalid @enderror">
-                            <option value="">~ Pilih Kategori Item ~</option>
-                            @foreach($category_items as $ci)
-                                <option value="{{ $ci->id }}">{{ $ci->category_item }}</option>
-                            @endforeach
-                        </select>
-                        @error('category_item_id')
-                        <div class="invalid-feedback">
-                            {{$message}}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
                         <label for="quantity">Stok</label>
                         <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" required autocomplete="off">
                         @error('quantity')
@@ -181,7 +154,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="price">Harga</label>
+                        <label for="price">Harga Jual</label>
                         <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" required autocomplete="off">
                         @error('price')
                         <div class="invalid-feedback">
@@ -284,20 +257,6 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="category_item_id">Kategori Item</label>
-                        <select name="category_item_id" id="category_item_id" class="custom-select @error('category_item_id') is-invalid @enderror">
-                            <option value="">~ Pilih Kategori Item ~</option>
-                            @foreach($category_items as $cii)
-                                <option value="{{ $cii->id }}">{{ $cii->category_item }}</option>
-                            @endforeach
-                        </select>
-                        @error('category_item_id')
-                        <div class="invalid-feedback">
-                            {{$message}}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
                         <label for="quantity">Stok</label>
                         <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="0" required autocomplete="off">
                         @error('quantity')
@@ -307,7 +266,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="price">Harga</label>
+                        <label for="price">Harga Jual</label>
                         <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price') }}" required autocomplete="off">
                         @error('price')
                         <div class="invalid-feedback">
@@ -354,7 +313,6 @@
         var quantity = $(e.relatedTarget).data('quantity');
         var price = $(e.relatedTarget).data('price');
         var category = $(e.relatedTarget).data('category');
-        var categoryitem = $(e.relatedTarget).data('categoryitem');
         var capitalprice = $(e.relatedTarget).data('capitalprice');
         
         $('#edit').find('input[name="id"]').val(id);
@@ -363,7 +321,6 @@
         $('#edit').find('input[name="quantity"]').val(quantity);
         $('#edit').find('input[name="price"]').val(price);
         $('#edit').find('select[name="category_id"]').val(category);
-        $('#edit').find('select[name="category_item_id"]').val(categoryitem);
         $('#edit').find('input[name="capital_price"]').val(capitalprice);
     });
     

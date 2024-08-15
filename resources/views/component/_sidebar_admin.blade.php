@@ -20,12 +20,12 @@
             </a>
           </li>
           <li>  
-            <a data-toggle="collapse" href="#akun" @if (request()->is('admin/admin') || request()->is('admin/cashier') || request()->is('admin/customer') || request()->is('admin/customer/detail-shopping/*') ) 
+            <a data-toggle="collapse" href="#akun" @if (request()->is('admin/admin') || request()->is('admin/cashier') ) 
               aria-expanded="true" @endif>
             <i class="now-ui-icons users_single-02"></i>
             <p>Akun<b class="caret"></b></p>
             </a>
-            <div class="collapse {{ request()->is('admin/admin') || request()->is('admin/cashier') || request()->is('admin/customer') || request()->is('admin/customer/detail-shopping/*') ?'show' : '' }}" id="akun">
+            <div class="collapse {{ request()->is('admin/admin') || request()->is('admin/cashier') ?'show' : '' }}" id="akun">
               <ul class="nav">
                 <li class="{{ request()->is('admin/admin') ?'active' : '' }}">
                   <a href="{{ route('admin.admin.index') }}">
@@ -42,29 +42,11 @@
               </ul>
             </div>
           </li>
-
-          <li>
-            <a data-toggle="collapse" href="#kategori" @if (request()->is('admin/category') || request()->is('admin/category-item'))
-              aria-expanded="true" @endif>
-            <i class="now-ui-icons design_app"></i>
-            <p>Kategori<b class="caret"></b></p>
+          <li class="nav-item {{ request()->is('admin/category') ?'active' : '' }}">
+            <a href="{{ route('admin.category.index') }}">
+              <i class="now-ui-icons design_app"></i>
+              <p>Kategori Produk</p>
             </a>
-            <div class="collapse {{ request()->is('admin/category') || request()->is('admin/category-item') ?'show' : '' }}" id="kategori">
-              <ul class="nav">
-                <li class="{{ request()->is('admin/category') ?'active' : '' }}">
-                  <a href="{{ route('admin.category.index') }}">
-                    <i class="now-ui-icons arrows-1_minimal-right"></i>
-                  <span class="sidebar-normal">Kategori Produk</span>
-                  </a>
-                </li>
-                <li class="{{ request()->is('admin/category-item') ?'active' : '' }}">
-                  <a href="{{ route('admin.category-item.index') }}">
-                    <i class="now-ui-icons arrows-1_minimal-right"></i>
-                  <span class="sidebar-normal">Kategori Item</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
           </li>
           <li class="nav-item {{ request()->is('admin/product') ?'active' : '' }}">
             <a href="{{ route('admin.product.index') }}">
@@ -78,40 +60,17 @@
               <p>Transaksi</p>
             </a>
           </li>
-          <li>
-            <a data-toggle="collapse" href="#laporan" @if (request()->is('admin/report') || request()->is('admin/report/show/*') || request()->is('admin/opname') || request()->is('admin/return') || request()->is('admin/supply') || request()->is('admin/supply/addProduct') || request()->is('admin/supply/*') || request()->is('admin/supply/show/*') || request()->is('admin/operating-cost') || request()->is('admin/best-selling') || request()->is('admin/daily-use-product/report'))
-              aria-expanded="true" @endif>
-            <i class="now-ui-icons education_paper"></i>
-            <p>Laporan<b class="caret"></b></p>
+          <li class="nav-item {{ request()->is('admin/report') || request()->is('admin/report/show/*') ?'active' : '' }}">
+            <a href="{{ route('admin.report.index') }}">
+              <i class="now-ui-icons education_paper"></i>
+              <p>Laporan Penjualan</p>
             </a>
-            <div class="collapse {{ request()->is('admin/report') || request()->is('admin/report/show/*') || request()->is('admin/opname') || request()->is('admin/return') || request()->is('admin/supply') || request()->is('admin/supply/addProduct') || request()->is('admin/supply/*') || request()->is('admin/supply/show/*') || request()->is('admin/operating-cost') || request()->is('admin/profit-loss') || request()->is('admin/best-selling') || request()->is('admin/daily-use-product/report') ?'show' : '' }}" id="laporan">
-              <ul class="nav">
-                <li class="{{ request()->is('admin/profit-loss') ?'active' : '' }}">
-                  <a href="{{ route('admin.profit-loss.index') }}">
-                    <i class="now-ui-icons arrows-1_minimal-right"></i>
-                  <span class="sidebar-normal">Untung / Rugi</span>
-                  </a>
-                </li>
-                <li class="{{ request()->is('admin/report') || request()->is('admin/report/show/*') ?'active' : '' }}">
-                  <a href="{{ route('admin.report.index') }}">
-                    <i class="now-ui-icons arrows-1_minimal-right"></i>
-                  <span class="sidebar-normal">Laporan Penjualan</span>
-                  </a>
-                </li>
-                <li class="{{ request()->is('admin/supply') || request()->is('admin/supply/addProduct') || request()->is('admin/supply/show/*')  ?'active' : '' }}">
-                  <a href="{{ route('admin.supply.index') }}">
-                    <i class="now-ui-icons arrows-1_minimal-right"></i>
-                  <span class="sidebar-normal">Laporan Pembelian (Supplier)</span>
-                  </a>
-                </li>
-                <li class="{{ request()->is('admin/best-selling') ?'active' : '' }}">
-                  <a href="{{ route('admin.best-selling.index') }}">
-                    <i class="now-ui-icons arrows-1_minimal-right"></i>
-                  <span class="sidebar-normal">Barang Terlaris</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
+          </li>
+          <li class="nav-item {{ request()->is('admin/supply') || request()->is('admin/supply/addProduct') || request()->is('admin/supply/show/*') ?'active' : '' }}">
+            <a href="{{ route('admin.supply.index') }}">
+              <i class="now-ui-icons health_ambulance"></i>
+              <p>Pembelian</p>
+            </a>
           </li>
           <li class="nav-item {{ request()->is('admin/setting') ?'active' : '' }}">
             <a href="{{ route('admin.setting.index') }}">

@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function searchFilterIndex($search, $filterCategory, $filterCategoryItem){
+    public function searchFilterIndex($search, $filterCategory){
         $index = Product::query();
         
         //Jika input search terisi
@@ -26,12 +26,6 @@ class ProductController extends Controller
             });
         }
         
-        if($filterCategoryItem!= null) {
-            $index->whereHas('categoryItem', function ($query) use ($filterCategoryItem){
-                $query->where('category_item', 'like', '%'.$filterCategoryItem.'%');
-            });
-        }
-        
         return $index->paginate(10);
         
     }
@@ -39,10 +33,9 @@ class ProductController extends Controller
     {
         $search = $request->get('search_product');
         $filterCategory = $request->get('category_search');
-        $filterCategoryItem = $request->get('category_item_search');
 
-        if ($search || $filterCategory || $filterCategoryItem) {
-            $products = $this->searchFilterIndex($search, $filterCategory, $filterCategoryItem); //Memanggil fungsi search dan filter
+        if ($search || $filterCategory) {
+            $products = $this->searchFilterIndex($search, $filterCategory); //Memanggil fungsi search dan filter
         } else {
             $products = Product::orderBy('id', 'DESC')->paginate(10);
         }

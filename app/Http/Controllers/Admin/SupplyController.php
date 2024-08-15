@@ -7,7 +7,6 @@ use App\Models\Product;
 use App\Models\ProductSupply;
 use App\Models\Supply;
 use App\Models\Category;
-use App\Models\CategoryItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -30,21 +29,19 @@ class SupplyController extends Controller
             $supplies = Supply::orderBy('id', 'DESC')->get();
         }
         $categories = Category::all();
-        $category_items = CategoryItem::all();
         $products = Product::orderBy('id', 'DESC')->get();
-        return view('admin.supply.index', compact('supplies','products', 'categories', 'category_items'));
+        return view('admin.supply.index', compact('supplies','products', 'categories'));
     }
 
     public function addProduct(Request $request)
     {
         $products = Product::orderBy('id', 'DESC')->get();
         $categories = Category::all();
-        $category_items = CategoryItem::all();
 
         $productSupply = ProductSupply::with('product')->where('user_id', auth()->user()->id)->where('status', 0)->orderBy('id', 'DESC')->get();
         $totalPrice = ProductSupply::with('product')->where('user_id', auth()->user()->id)->where('status', 0)->sum('total_price');
         $totalItem = ProductSupply::with('product')->where('user_id', auth()->user()->id)->where('status', 0)->count();
-        return view('admin.supply.store', compact('products', 'productSupply',  'categories', 'category_items', 'totalPrice','totalItem'));
+        return view('admin.supply.store', compact('products', 'productSupply',  'categories', 'totalPrice','totalItem'));
     }
 
     public function generateUniqueCode()
@@ -96,26 +93,58 @@ class SupplyController extends Controller
         $productSupply->product_id = $request->product_id;
         $productSupply->quantity = $request->quantity;
         $productSupply->status = 0;
-        $productSupply->is_ppn = $request->is_ppn;;
-
-        if ($request->is_ppn == 1) {
-            //kalau pakai ppn maka tambah 11% di harganya
-            $ppn = ($request->total_price / $request->quantity) * (11/100);
-
-            $productSupply->price = round((($request->total_price / $request->quantity) + $ppn),1);
-
-            $ppnTotal = ($request->total_price) * (11/100);
-            $productSupply->total_price = round(($request->total_price + $ppnTotal),1);
-        } else {
-            //kalau tanpa ppn
-            $productSupply->price = $request->total_price / $request->quantity;
-
-            $productSupply->total_price = $request->total_price;
-        }
+        $productSupply->price = $request->total_price / $request->quantity;
+        $productSupply->total_price = $request->total_price;
         $productSupply->save();
 
         toast('Berhasil menambah data pembelian')->autoClose(2000)->hideCloseButton();
         return redirect()->back(); 
+    }
+
+    public function storeNewProduct(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            //masukkan dulu data ke tabel produk
+            if ($request->product_code == null) {
+                $product = new Product();
+                $product->product_code = $this->generateUniqueCode();
+            } else {
+                $validatedData = $request->validate([
+                    'product_code' => 'required|unique:product'
+                ]);
+                $product = new Product();
+                $product->product_code = $request->product_code;            
+            }
+            $product->name = $request->name;
+            $quantity = "0";
+            $product->quantity = $quantity;
+            $product->price = $request->price;
+            $product->capital_price = $request->capital_price;
+            $product->category_id = $request->category_id;
+            $product->save();
+
+            //lanjut masukkan data ke product supply
+            $productSupply = new ProductSupply();
+            $productSupply->user_id = auth()->user()->id;
+            $productSupply->supply_id = null;
+            $productSupply->product_id = $product->id;
+            $productSupply->quantity = $request->quantity;
+            $productSupply->status = 0;
+
+            //atur disini tanpa ppn
+            $productSupply->price = $request->capital_price;
+            $productSupply->total_price = $request->capital_price * $request->quantity;
+            
+            $productSupply->save();
+            DB::commit();
+            toast('Berhasil menambah data Produk Baru')->autoClose(2000)->hideCloseButton();
+            return redirect()->back(); 
+        } catch (\Exception $e) {
+            DB::rollback();
+            toast('Gagal menambah data')->autoClose(2000)->hideCloseButton();
+            return redirect()->back();
+        }
     }
 
     public function deleteProduct($id)
@@ -198,7 +227,7 @@ class SupplyController extends Controller
             $produk->update(['quantity' => $quantity]);
         }
         $supply->delete();
-        toast('Data pasok berhasil dihapus')->autoClose(2000)->hideCloseButton();
+        toast('Data Pembelian berhasil dihapus')->autoClose(2000)->hideCloseButton();
         return redirect()->back()->with('success','Berhasil menghapus data pembelian');
     }
     
@@ -298,7 +327,6 @@ class SupplyController extends Controller
                     'slug' => Str::slug($request->product_name[$i]),
                     'price' => $request->price1[$i],
                     'category_id' => $request->category_id[$i],
-                    'category_item_id' => $request->category_item_id[$i],
                     'capital_price' => $request->price[$i],
                 ]);
                 ProductSupply::create([
@@ -343,35 +371,9 @@ class SupplyController extends Controller
             //update product supply
             $productSupply = ProductSupply::find($request->idProductSupply);
             $productSupply->quantity = $request->qtyProductSupply;
+            $productSupply->price = $request->totalPriceSupply / $request->qtyProductSupply;
 
-            //cek requestnya ppn atau tidak
-            if ($request->isPPN == 1) {
-                //kalau pakai ppn maka tambah 11% di harganya
-                if ($productSupply->is_ppn == 1) {
-                    if ($productSupply->quantity != $request->qtyProductSupply || $productSupply->total_price != $request->totalPriceSupply) {
-                        $ppn = ($request->totalPriceSupply / $request->qtyProductSupply) * (11/100);
-                        $productSupply->price = round((($request->totalPriceSupply / $request->qtyProductSupply) + $ppn),1);
-        
-                        $ppnTotal = ($request->totalPriceSupply) * (11/100);
-                        $productSupply->total_price = round(($request->totalPriceSupply + $ppnTotal),1);
-                    } else {
-                        //nothing changes
-                    }
-                    
-                } else {
-                    $ppn = ($request->totalPriceSupply / $request->qtyProductSupply) * (11/100);
-                    $productSupply->price = round((($request->totalPriceSupply / $request->qtyProductSupply) + $ppn),1);
-    
-                    $ppnTotal = ($request->totalPriceSupply) * (11/100);
-                    $productSupply->total_price = round(($request->totalPriceSupply + $ppnTotal),1);
-                }
-            }else{
-                //kalau tanpa ppn
-                $productSupply->price = $request->totalPriceSupply / $request->qtyProductSupply;
-
-                $productSupply->total_price = $request->totalPriceSupply;   
-            }
-            $productSupply->is_ppn = $request->isPPN;
+            $productSupply->total_price = $request->totalPriceSupply;
             $productSupply->update();
 
             DB::commit();

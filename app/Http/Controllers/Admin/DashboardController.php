@@ -17,7 +17,6 @@ class DashboardController extends Controller
     public function index()
     {
         $transactions = Transaction::count();
-        $transactions = Transaction::count();
         $categories = Category::count();
         $products = Product::count();
         $supplies = Supply::count();
@@ -41,7 +40,6 @@ class DashboardController extends Controller
                     $nameProduct [] = $c->name;
                     $codeProduct [] = $c->product_code;
                     $priceProduct [] = $c->price;
-                    $categoryItem [] = $c->categoryItem->category_item;
                     $category [] = $c->category->name;
                 }
             }
@@ -51,7 +49,6 @@ class DashboardController extends Controller
                 'product' => $nameProduct,
                 'code' => $codeProduct,
                 'price' => $priceProduct,
-                'categoryItem' => $categoryItem,
                 'category' => $category
             ];
     

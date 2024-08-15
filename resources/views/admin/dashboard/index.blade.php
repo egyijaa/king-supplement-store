@@ -189,7 +189,7 @@
                       <th>
                         Barcode - Nama Barang
                       </th>
-                      <th>Kategori Item</th>
+                      <th>Kategori</th>
                       <th>
                         Harga
                       </th>
@@ -206,7 +206,7 @@
                         @for ($i = 0; $i < $totalData; $i++)
                         <tr>
                             <td>{{ $result['code'][$i] }} - {{ $result['product'][$i] }}</td>
-                            <td>{{ $result['categoryItem'][$i] }}</td>
+                            <td>{{ $result['category'][$i] }}</td>
                             <td>@currency($result['price'][$i])</td>
                             <td>{{ $result['total'][$i] }}</td>
                         </tr>

@@ -44,7 +44,7 @@ class TransactionController extends Controller
 
     public function show(Request $request)
     {
-        $productTransaction = ProductTransaction::find($request->id);
+        $productTransaction = ProductTransaction::with('product')->find($request->id);
         //return response
         return response()->json([
             'success' => true,
@@ -55,7 +55,7 @@ class TransactionController extends Controller
 
     public function showLastProduct(Request $request)
     {
-        $productTransaction = ProductTransaction::where('status', '0')->where('user_id', auth()->user()->id)->latest()->first();
+        $productTransaction = ProductTransaction::where('status', '0')->where('user_id', auth()->user()->id)->with('product')->latest()->first();
         //return response
         return response()->json([
             'success' => true,
@@ -107,7 +107,6 @@ class TransactionController extends Controller
                         $productTransaction->disc_rp = $request->disc_rp;
                         $productTransaction->disc_prc = $request->disc_prc;
                         $productTransaction->price = $product->price;
-                        $productTransaction->capital_price = $product->capital_price ?? null;
                         $productTransaction->status = '0';
                         $productTransaction->save();
                         $productTransaction = ProductTransaction::where('id', $productTransaction->id)->with('product')->first();
@@ -133,7 +132,6 @@ class TransactionController extends Controller
                     $productTransaction->disc_rp = $request->disc_rp;
                     $productTransaction->disc_prc = $request->disc_prc;
                     $productTransaction->price = $product->price;
-                    $productTransaction->capital_price = $product->capital_price ?? null;
                     $productTransaction->status = '0';
                     $productTransaction->save();
                     $productTransaction = ProductTransaction::where('id', $productTransaction->id)->with('product')->first();
@@ -230,12 +228,12 @@ class TransactionController extends Controller
             if ($ubah == $today) {
                 $last_code = Transaction::orderBy('id', 'desc')->first()->transaction_code;
                 $removed4char = substr($last_code, -5);
-                $generate_code = 'MM' . $date . '-' .  str_pad($removed4char + 1, 5, "0", STR_PAD_LEFT);
+                $generate_code = 'KS' . $date . '-' .  str_pad($removed4char + 1, 5, "0", STR_PAD_LEFT);
             } else {
-                $generate_code = 'MM' . $date . '-' . str_pad(1, 5, "0", STR_PAD_LEFT);
+                $generate_code = 'KS' . $date . '-' . str_pad(1, 5, "0", STR_PAD_LEFT);
             }
         } else {
-            $generate_code = 'MM' . $date . '-' . str_pad(1, 5, "0", STR_PAD_LEFT);
+            $generate_code = 'KS' . $date . '-' . str_pad(1, 5, "0", STR_PAD_LEFT);
         }
     
         return $generate_code;
@@ -266,6 +264,9 @@ class TransactionController extends Controller
                 $transaction->return = $request->return;
                 $transaction->total_sementara = $totalPurchase;
                 $transaction->purchase_order = $totalPurchaseFinal;
+                $transaction->payment_method = $request->payment_method ?? null;
+                $transaction->customer_name = $request->customer_name ?? null;
+                $transaction->account_number = $request->account_number;
                 $transaction->disc_total_rp = $request->get_total_disc_rp;
                 $transaction->disc_total_prc = $request->get_total_disc_prc;
                 $transaction->method = $request->method;
@@ -291,9 +292,7 @@ class TransactionController extends Controller
             $transactionId = $transaction->id;
             $transactionn = Transaction::find($transactionId);
             $productTransactions = ProductTransaction::where('transaction_id', $transactionId)->get();
-            // return view('admin.report.print', compact('transactionn','productTransactions'));
-            toast('Transaksi Berhasil')->autoClose(2000)->hideCloseButton();
-            return redirect()->back();
+            return view('admin.report.print', compact('transactionn','productTransactions'));
         } catch (\Exception $e) {
             DB::rollback();
             $var = response()->json([
