@@ -26,7 +26,7 @@
             </a>
           </li>
           <li class="nav-item {{ request()->is('kasir/transaction') ?'active' : '' }}">
-            <a href="{{ route('kasir.transaction.index') }}" target="_blank">
+            <a href="{{ route('kasir.transaction.index') }}">
               <i class="now-ui-icons shopping_cart-simple"></i>
               <p>Transaksi</p>
             </a>

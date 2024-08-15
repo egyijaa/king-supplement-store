@@ -128,7 +128,8 @@ th.price {
             window.onload = function() { window.print(); }
             document.onkeyup = function(e) {
                 if (e.which == 8) {
-                window.location.href = "{{ route('admin.transaction.index')}}";
+                   var $link = document.referrer;
+                    location.replace($link);
                 } else if (e.which == 80) {
                 window.print();
                 }  

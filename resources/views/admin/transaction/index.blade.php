@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col"><small><i>F2 utk edit barang terakhir, F8 utk hapus barang terakhir, Shift+F8 Hapus Semua</i></small></div>
+                    <div class="col"><small><i>F2 utk edit barang terakhir, F8 utk hapus barang terakhir</i></small></div>
                 </div>
                 <div class="table-responsive mt-3">
                     <div class="overflow-auto" style="height:420px;

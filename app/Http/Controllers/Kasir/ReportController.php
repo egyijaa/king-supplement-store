@@ -21,10 +21,18 @@ class ReportController extends Controller
                    $toDate ." 23:59:59"
                 ]
               )->get();
+              $total_earn = Transaction::whereRaw(
+                "(created_at >= ? AND created_at <= ?)", 
+                [
+                   $fromDate ." 00:00:00", 
+                   $toDate ." 23:59:59"
+                ]
+            )->sum('purchase_order');
         } else {
             $transactions = Transaction::where('user_id', auth()->user()->id)->whereDate('created_at', date('Y-m-d'))->orderBy('id', 'DESC')->get();
+            $total_earn = Transaction::whereDate('created_at', date('Y-m-d'))->sum('purchase_order');
         }
-        return view('kasir.report.index', compact('transactions'));
+        return view('kasir.report.index', compact('transactions', 'total_earn'));
     }
     public function show($id)
     {

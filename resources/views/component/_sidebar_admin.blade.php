@@ -55,7 +55,7 @@
             </a>
           </li>
           <li class="nav-item {{ request()->is('admin/transaction') ?'active' : '' }}">
-            <a href="{{ route('admin.transaction.index') }}" target="_blank">
+            <a href="{{ route('admin.transaction.index') }}">
               <i class="now-ui-icons shopping_cart-simple"></i>
               <p>Transaksi</p>
             </a>

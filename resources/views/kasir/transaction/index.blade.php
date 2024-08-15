@@ -1,290 +1,220 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.template')
+@section('content')
+<style>
+    .card-header{
+        background-color: #1B3A5D !important;
+        color: white !important;
+    }
+    .fa-eye:hover {
+        cursor: pointer;
+    }
+    .fade {
+    -webkit-transition: opacity 0.01s linear;
+        -moz-transition: opacity 0.01s linear;
+        -ms-transition: opacity 0.01s linear;
+            -o-transition: opacity 0.01s linear;
+            transition: opacity 0.01s linear;
+    }
+</style>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<meta name="csrf-token" content="{{ csrf_token() }}" />
+<div class="pesan">
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>{{ App\Models\Company::take(1)->first()->name }} - Transaksi</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-  <link href="{{ url('transaction/img/faviconn.png') }}" rel="icon">
-  <link href="{{ url('transaction/img/apple-touch-iconn.png') }}" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="{{ url('transaction/vendor/aos/aos.css') }}" rel="stylesheet">
-  <link href="{{ url('transaction/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-  <link href="{{ url('transaction/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-  <link href="{{ url('transaction/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
-  <link href="{{ url('transaction/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
-  <link href="{{ url('transaction/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
-  <link href="{{ url('transaction/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{{ url('transaction/css/style.css') }}" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: Arsha - v4.10.0
-  * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
-</head>
-
-<body onload="startTime()">
-
-  <!-- ======= Header ======= -->
-  <!--<header id="header" class="fixed-top header-inner-pages">-->
-  <!--  <div class="container d-flex align-items-center">-->
-
-  <!--    <h1 class="logo me-auto"><a href="#">{{ App\Models\Company::take(1)->first()->name }}</a></h1>-->
-
-  <!--    <nav id="navbar" class="navbar">-->
-  <!--      <ul>-->
-  <!--        <li><a class="getstarted scrollto" href="{{ route('kasir.product.index') }}">Kembali</a></li>-->
-  <!--      </ul>-->
-  <!--      <i class="bi bi-list mobile-nav-toggle"></i>-->
-  <!--    </nav>-->
-
-  <!--  </div>-->
-  <!--</header>-->
-  <!-- End Header -->
-
-  <main id="main">
-
-    <section class="inner-page">
-      <div class="container">
-        <style>
-            .card-header{
-                background-color: #1B3A5D !important;
-                color: white !important;
-            }
-            .fa-eye:hover {
-                cursor: pointer;
-            }
-            .fade {
-            -webkit-transition: opacity 0.01s linear;
-                -moz-transition: opacity 0.01s linear;
-                -ms-transition: opacity 0.01s linear;
-                    -o-transition: opacity 0.01s linear;
-                    transition: opacity 0.01s linear;
-            }
-        </style>
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <meta name="csrf-token" content="{{ csrf_token() }}" />
-        <div class="pesan">
-            @include('sweetalert::alert')
-        </div>
-        <div class="row">
-            <div class="col-8">
-                <div class="card">
-                  <div class="card-header justify-content-between d-flex d-inline">
-                        <h5 class="card-title">Transaksi</h5>
-						<div id="tampil"></div>
-                        <div id="txt" style="color: blanchedalmond"></div>
+</div>
+<div class="row">
+    <div class="col-8">
+        <div class="card">
+            <div class="card-header justify-content-between d-flex d-inline">
+                <h5 class="card-title">Transaksi</h5>
+                <div id="tampil"></div>
+                <div id="txt" style="color: blanchedalmond"></div>
+            </div>
+            
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8">
+                        <label for="get_product_code">Barcode Produk</label>
+                        <input type="text" id="get_product_code" placeholder="scan barcode" class="form-control" autofocus autocomplete="off">
                     </div>
-                    
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-8">
-                                <label for="get_product_code">Barcode Produk</label>
-                                <input type="text" id="get_product_code" placeholder="scan barcode" class="form-control" autofocus autocomplete="off">
-                            </div>
-                            <div class="col-3" style="margin-top:22px;">
-                                <input type="button" value="Cari (Enter)" id="addToCart" class="btn btn-primary text-white">
-                            </div>
-                            <div class="col-8">
-                                <label for="get_product_code2">Nama Produk</label>
-                                    <select class="js-example-basic-single select2" name="get_product_code2" id="get_product_code2" style="width: 100% !important;">
-                                        <option value="" selected></option>
-                                        @foreach($products as $product)
-                                            <option value="{{ $product->product_code }}">{{ $product->name }} (@currency($product->price))</option>
-                                        @endforeach
-                                    </select>
-                            </div>
-                            <div class="col-3">
-                                {{-- <label for="get_product_quantity">Jumlah</label> --}}
-                                <input type="number" hidden id="get_product_quantity" disabled placeholder="Jumlah" class="form-control" min="0">
-                            </div>
-                            <div class="col-3">
-                                {{-- <label for="get_product_disc_rp">Discount Rp</label> --}}
-                                <input type="number" hidden id="get_product_disc_rpp" disabled placeholder="Discount Rp" class="form-control" min="0">
-                            </div>
-                            <div class="col-3">
-                                {{-- <label for="get_product_disc_prc">Discount %</label> --}}
-                                <input type="number" hidden id="get_product_disc_prcc" disabled placeholder="Discount %" class="form-control" min="0">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col"><small><i>F1 utk edit barang terakhir, F8 utk hapus barang terakhir, Shift+F8 Hapus Semua</i></small></div>
-                        </div>
-                        <div class="table-responsive mt-3">
-                            <div class="overflow-auto" style="height:420px;
-                            overflow-y: scroll;">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <td>Nama Produk</td>
-                                        <td>Jumlah</td>
-                                        <td>Harga</td>
-                                        <td>Diskon</td>
-                                        <td>Total</td>
-                                        <td>Aksi</td>
-                                    </tr>
-                                </thead>
-                                <tbody id="posts-crud">
-                                    
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
+                    <div class="col-3" style="margin-top:10px;">
+                        <input type="button" value="Cari (Enter)" id="addToCart" class="btn btn-primary text-white">
+                    </div>
+                    <div class="col-8">
+                        <label for="get_product_code2">Nama Produk</label>
+                            <select class="js-example-basic-single select2" name="get_product_code2" id="get_product_code2" style="width: 100% !important;">
+                                <option value="" selected></option>
+                                @foreach($products as $product)
+                                    <option value="{{ $product->product_code }}">{{ $product->name }} (@currency($product->price))</option>
+                                @endforeach
+                            </select>
+                    </div>
+                    <div class="col-3">
+                        {{-- <label for="get_product_quantity">Jumlah</label> --}}
+                        <input type="number" hidden id="get_product_quantity" disabled placeholder="Jumlah" class="form-control" min="0">
+                    </div>
+                    <div class="col-3">
+                        {{-- <label for="get_product_disc_rp">Discount Rp</label> --}}
+                        <input type="number" hidden id="get_product_disc_rpp" disabled placeholder="Discount Rp" class="form-control" min="0">
+                    </div>
+                    <div class="col-3">
+                        {{-- <label for="get_product_disc_prc">Discount %</label> --}}
+                        <input type="number" hidden id="get_product_disc_prcc" disabled placeholder="Discount %" class="form-control" min="0">
                     </div>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-header justify-content-between d-flex d-inline">
-                        <h1 class="card-title" id="totalBuy" style="font-size: 300%;" ></h1>
-                    </div>
-                    <div class="card-body" style="background-color: antiquewhite">
-                        <form action="{{ route('kasir.transaction.pay') }}" method="post">
-                            @csrf
-                            <label>
-                                <input type="radio" name="method" id="method" value="offline" checked> Offline
-                            </label> |
-                            <label>
-                                <input type="radio" name="method" id="method" value="online"> Online
-                            </label>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="get_total_disc_rp">Discount Rp</label>
-                                        <input type="number" class="form-control" id="get_total_disc_rp" name="get_total_disc_rp">
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="get_total_disc_prc">Discount %</label>
-                                        <input type="number" class="form-control" id="get_total_disc_prc" name="get_total_disc_prc">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="payment">Bayar (F9)</label>
-                                <input type="number" class="form-control" id="payment" name="payment">
-                            </div>
-                            <div class="form-group">
-                                <label for="return">Kembalian</label>
-                                <input type="number" class="form-control" id="return" readonly name="return">
-                            </div>
-                            <div class="form-group mt-2">
-                                <button type="submit" class="btn btn-primary" id="tPayment" disabled> Bayar (F10)</button>
-                            </div>
-                        </form>
-
-                        <form action="{{ route('kasir.transaction.payDirectly') }}" method="post">
-                            @csrf
-                            <div class="form-group mt-2">
-                                <button type="submit" class="btn" id="tPaymentDirectly"></button>
-                            </div>
-                        </form>
-                    </div>
+                <div class="row">
+                    <div class="col"><small><i>F2 utk edit barang terakhir, F8 utk hapus barang terakhir</i></small></div>
                 </div>
-            </div>
-          </div>
-        
-            <!-- Modal -->
-        <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">EDIT POST</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-        
-                        <input type="hidden" id="productTransaction_id">
-        
-                        <div class="form-group">
-                            <label for="quantity" class="control-label">Quantity</label>
-                            <input type="number" class="form-control" id="quantity-edit" autofocus>
-                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-quantity-edit"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="get_product_disc_rp" class="control-label">Disc Rp</label>
-                                    <input type="number" class="form-control" id="get_product_disc_rp">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="get_product_disc_prc" class="control-label">Disc %</label>
-                                    <input type="number" class="form-control" id="get_product_disc_prc">
-                                </div>
-                            </div>
-                        </div>
-        
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">TUTUP</button>
-                        <button type="button" class="btn btn-primary" id="update-quantity">UPDATE (F2)</button>
+                <div class="table-responsive mt-3">
+                    <div class="overflow-auto" style="height:420px;
+                    overflow-y: scroll;">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td>Nama Produk</td>
+                                <td>Jumlah</td>
+                                <td>Harga</td>
+                                <td>Diskon</td>
+                                <td>Total</td>
+                                <td>Aksi</td>
+                            </tr>
+                        </thead>
+                        <tbody id="posts-crud">
+                            
+                        </tbody>
+                    </table>
                     </div>
                 </div>
             </div>
         </div>
-      </div>
-    </section>
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-
-
-    <div class="container footer-bottom clearfix">
-      <div class="copyright">
-        &copy; Copyright <strong><span>{{ App\Models\Company::take(1)->first()->name }}</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-      </div>
     </div>
-  </footer><!-- End Footer -->
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header justify-content-between d-flex d-inline">
+                <h5 class="card-title" id="totalBuy"></h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('kasir.transaction.pay') }}" method="post">
+                    @csrf
+                    <label>
+                        <input type="radio" name="method" id="method" value="offline" checked> Offline
+                    </label> |
+                    <label>
+                        <input type="radio" name="method" id="method" value="online"> Online
+                    </label>
+                    <a class="btn btn-primary btn-sm" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Metode Pembayaran
+                    </a>
+                      <div class="collapse" id="collapseExample">
+                        <label>
+                            <input type="checkbox" name="payment_method" id="payment_method" value="Kartu"> Kartu
+                        </label> |
+                        <label>
+                            <input type="checkbox" name="payment_method" id="payment_method" value="Transfer"> Transfer
+                        </label> |
+                        <label>
+                            <input type="checkbox" name="payment_method" id="payment_method" value="QR Code"> QR Code
+                        </label>
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="customer_name" id="l_customer_name">Bank/Nama</label>
+                                <input type="text" class="form-control" id="customer_name" name="customer_name" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="account_number" id="account_number">Nomor Rek</label>
+                                <input type="text" class="form-control" id="account_number" name="account_number" autocomplete="off">
+                            </div>
+                        </div>
+                      </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="get_total_disc_rp">Discount Rp</label>
+                                <input type="number" class="form-control" id="get_total_disc_rp" name="get_total_disc_rp">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="get_total_disc_prc">Discount %</label>
+                                <input type="number" class="form-control" id="get_total_disc_prc" name="get_total_disc_prc">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment">Bayar (F9)</label>
+                        <input type="number" class="form-control" id="payment" name="payment">
+                    </div>
+                    <div class="form-group">
+                        <label for="return">Kembalian</label>
+                        <input type="number" class="form-control" id="return" readonly name="return">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" id="tPayment" disabled> Bayar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-  {{-- <div id="preloader"></div> --}}
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <!--   Core JS Files   (dari template sblumnya)-->
-  <script src="{{ url('template/admin_temp/assets/js/core/jquery.min.js') }}"></script>
-  <script src="{{ url('template/admin_temp/assets/js/core/popper.min.js') }}"></script>
-  <script src="{{ url('template/admin_temp/assets/js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
+<!-- Modal edit -->
+<div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
-  <!-- Vendor JS Files -->
-  <script src="{{ url('transaction/vendor/aos/aos.js') }}"></script>
-  <script src="{{ url('transaction/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ url('transaction/vendor/glightbox/js/glightbox.min.js') }}"></script>
-  <script src="{{ url('transaction/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
-  <script src="{{ url('transaction/vendor/swiper/swiper-bundle.min.js') }}"></script>
-  <script src="{{ url('transaction/vendor/waypoints/noframework.waypoints.js') }}"></script>
-  <script src="{{ url('transaction/vendor/php-email-form/validate.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+                <input type="hidden" id="productTransaction_id">
 
-  <!-- Template Main JS File -->
-  <script src="{{ url('transaction/js/main.js') }}"></script>
+                <div class="form-group">
+                    <label for="name_product" class="control-label">Nama Produk</label>
+                    <input type="text" class="form-control" id="name-product-edit" disabled>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="get_product_disc_rp" class="control-label">Harga</label>
+                            <input type="number" class="form-control" id="price-product-edit" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="quantity" class="control-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity-edit" autofocus>
+                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-quantity-edit"></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="get_product_disc_rp" class="control-label">Disc Rp</label>
+                            <input type="number" class="form-control" id="get_product_disc_rp">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="get_product_disc_prc" class="control-label">Disc %</label>
+                            <input type="number" class="form-control" id="get_product_disc_prc">
+                        </div>
+                    </div>
+                </div>
 
-  <script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">TUTUP</button>
+                <button type="button" class="btn btn-primary" id="update-quantity">UPDATE (F4)</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+@push('scripts')
+
+<script>
     $(document).ready(function(){
         $('.js-example-basic-single').select2();
         const totalBuy = document.getElementById('totalBuy');
@@ -299,12 +229,14 @@
                     $.each(response.data, function (key, item) {
                     var harga = item.product.price;
                     var hargaa = formatRupiah(item.product.price);
+                    var hargaTotal = item.quantity * harga - item.disc_rp - ((item.disc_prc / 100) * (harga * item.quantity));
+                    var formatHargaTotal = formatRupiah(hargaTotal);
                     let content = `<tr>\
                         <td>${item.product.name}</td>\
                         <td>${item.quantity}</td>\
                         <td style="background-color:#34495e; color:white; font-size:140%;">${hargaa}</td>\
                         <td>${+item.disc_rp + ((item.disc_prc / 100) * (harga * item.quantity)) }</td>\
-                        <td>${item.quantity * harga - item.disc_rp - ((item.disc_prc / 100) * (harga * item.quantity))}</td>\
+                        <td>${formatHargaTotal}</td>\
                         <td>
                             <a href="javascript:void(0)" value="${item.id}" data-id="${item.id}" class="btn btn-primary btn-sm edit-btn">EDIT</a>
                             <button type="button" value="${item.id}" data-id="${item.id}" class="btn btn-danger delete-btn btn-sm">Hapus</button></td>\
@@ -330,19 +262,19 @@
                         tambahkan();
                     } 
                 }
-                if (!$("#tPayment").is(":disabled")) {
-                    switch(e.which) { 
-                    case 121: // up key
-                        $('#tPayment').trigger('click');
-                    } 
-                }
+                // if (!$("#tPayment").is(":disabled")) {
+                //     switch(e.which) { 
+                //     case 121: // up key
+                //         $('#tPayment').trigger('click');
+                //     } 
+                // }
                 switch(e.which) { 
                 case 120:
                     $("#payment").focus();
                 }
                 
-                if (e.which == 112) {
-                    //f1
+                if (e.which == 113) {
+                    //f2
                     editLastProduct();
                 }
                 if (e.which == 119) {
@@ -350,8 +282,8 @@
                     deleteLastProduct();
                 }
 
-                if (e.which == 113) {
-                    //f2
+                if (e.which == 115) {
+                    //f4
                     $('#update-quantity').trigger('click');
                 }
 
@@ -361,21 +293,21 @@
                 }
             });
 
-            var map = {}; // You could also use an array
-            onkeydown = onkeyup = function(e){
-                e = e || event; // to deal with IE
-                map[e.keyCode] = e.type == 'keydown';
-                /* insert conditional here */
-                //DELETE ALL PRODUCT IN CART
-                if(map[16] && map[119]){ // SHIFT+F8
-                    deleteAllCart();
-                    map = {};
-                }else if(map[16] && map[120]){ // shift+f9 utk langsung bayar (pegen cepat)
-                    $('#tPaymentDirectly').trigger('click');
-                    map = {};
-                }
+            // var map = {}; // You could also use an array
+            // onkeydown = onkeyup = function(e){
+            //     e = e || event; // to deal with IE
+            //     map[e.keyCode] = e.type == 'keydown';
+            //     /* insert conditional here */
+            //     //DELETE ALL PRODUCT IN CART
+            //     if(map[16] && map[119]){ // SHIFT+F8
+            //         deleteAllCart();
+            //         map = {};
+            //     }else if(map[16] && map[120]){ // shift+f9 utk langsung bayar (pegen cepat)
+            //         $('#tPaymentDirectly').trigger('click');
+            //         map = {};
+            //     }
 
-            }
+            // }
         });
         
         addToCart.addEventListener('click', function() {
@@ -429,7 +361,11 @@
 
                         //fill data to form
                         $('#productTransaction_id').val(response.data.id);
+                        $('#name-product-edit').val(response.data.product.name);
+                        $('#price-product-edit').val(response.data.product.price);
                         $('#quantity-edit').val(response.data.quantity);
+                        $('#get_product_disc_rp').val(response.data.disc_rp);
+                        $('#get_product_disc_prc').val(response.data.disc_prc);
 
                         //open modal
                         $('#modal-edit').modal('show');
@@ -522,6 +458,8 @@
 
                         //fill data to form
                         $('#productTransaction_id').val(response.data.id);
+                        $('#name-product-edit').val(response.data.product.name);
+                        $('#price-product-edit').val(response.data.product.price);
                         $('#quantity-edit').val(response.data.quantity);
                         $('#get_product_disc_rp').val(response.data.disc_rp);
                         $('#get_product_disc_prc').val(response.data.disc_prc);
@@ -725,61 +663,59 @@
     }
     
   </script>
-  
-	 <script>
-        var date = new Date();
-        var tahun = date.getFullYear();
-        var bulan = date.getMonth();
-        var tanggal = date.getDate();
-        var hari = date.getDay();
-        var jam = date.getHours();
-        var menit = date.getMinutes();
-        var detik = date.getSeconds();
-        switch(hari) {
-            case 0: hari = "Minggu"; break;
-            case 1: hari = "Senin"; break;
-            case 2: hari = "Selasa"; break;
-            case 3: hari = "Rabu"; break;
-            case 4: hari = "Kamis"; break;
-            case 5: hari = "Jum'at"; break;
-            case 6: hari = "Sabtu"; break;
-        }
-        switch(bulan) {
-            case 0: bulan = "Januari"; break;
-            case 1: bulan = "Februari"; break;
-            case 2: bulan = "Maret"; break;
-            case 3: bulan = "April"; break;
-            case 4: bulan = "Mei"; break;
-            case 5: bulan = "Juni"; break;
-            case 6: bulan = "Juli"; break;
-            case 7: bulan = "Agustus"; break;
-            case 8: bulan = "September"; break;
-            case 9: bulan = "Oktober"; break;
-            case 10: bulan = "November"; break;
-            case 11: bulan = "Desember"; break;
-        }
-        var tampilTanggal = "" + hari + ", " + tanggal + " " + bulan + " " + tahun;
- 
-        document.getElementById("tampil").innerHTML = tampilTanggal;
-    </script>
-	
-	<script>
-	//auto refresh saat tdk ada presskey atau mouseover
-     var time = new Date().getTime();
-     $(document.body).bind("mousemove keypress", function(e) {
-         time = new Date().getTime();
-     });
 
-     function refresh() {
-         if(new Date().getTime() - time >= 120000) 
-             window.location.reload(true);
-         else 
-             setTimeout(refresh, 10000);
-     }
+<script>
+    var date = new Date();
+    var tahun = date.getFullYear();
+    var bulan = date.getMonth();
+    var tanggal = date.getDate();
+    var hari = date.getDay();
+    var jam = date.getHours();
+    var menit = date.getMinutes();
+    var detik = date.getSeconds();
+    switch(hari) {
+        case 0: hari = "Minggu"; break;
+        case 1: hari = "Senin"; break;
+        case 2: hari = "Selasa"; break;
+        case 3: hari = "Rabu"; break;
+        case 4: hari = "Kamis"; break;
+        case 5: hari = "Jum'at"; break;
+        case 6: hari = "Sabtu"; break;
+    }
+    switch(bulan) {
+        case 0: bulan = "Januari"; break;
+        case 1: bulan = "Februari"; break;
+        case 2: bulan = "Maret"; break;
+        case 3: bulan = "April"; break;
+        case 4: bulan = "Mei"; break;
+        case 5: bulan = "Juni"; break;
+        case 6: bulan = "Juli"; break;
+        case 7: bulan = "Agustus"; break;
+        case 8: bulan = "September"; break;
+        case 9: bulan = "Oktober"; break;
+        case 10: bulan = "November"; break;
+        case 11: bulan = "Desember"; break;
+    }
+    var tampilTanggal = "" + hari + ", " + tanggal + " " + bulan + " " + tahun;
 
-     setTimeout(refresh, 10000);
+    document.getElementById("tampil").innerHTML = tampilTanggal;
 </script>
 
-</body>
+<script>
+//auto refresh saat tdk ada presskey atau mouseover
+ var time = new Date().getTime();
+ $(document.body).bind("mousemove keypress", function(e) {
+     time = new Date().getTime();
+ });
 
-</html>
+ function refresh() {
+     if(new Date().getTime() - time >= 120000) 
+         window.location.reload(true);
+     else 
+         setTimeout(refresh, 10000);
+ }
+
+ setTimeout(refresh, 10000);
+</script>
+
+@endpush

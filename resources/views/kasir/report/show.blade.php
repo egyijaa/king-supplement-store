@@ -11,7 +11,7 @@
               <a href="{{ route('kasir.report.print', $transaction->id) }}" target="_blank" class="btn btn-primary">Cetak Nota</a>
             </div>
             <div class="row justify-content-between d-flex d-inline">
-              <a href="{{ route('kasir.report.index') }}"><i class="fas fa-arrow-left"> Kembali</i></a>
+              <a href="{{ url()->previous() }}"><i class="fas fa-arrow-left"> Kembali</i></a>
             </div>
           </div>
         <hr>
@@ -72,7 +72,7 @@
                 No
               </th>
               <th>
-                Nama Produk
+                Nama Produk - Kode
               </th>
               <th>
                 Jumlah
@@ -93,31 +93,28 @@
                   <td>{{ $key+1 }}</td>
                   <td>{{ $product->product->name }} - {{ $product->product->product_code }}</td>
                   <td>{{ $product->quantity }}</td>
+                  <td>
+                    @if ($product->price)
+                      @currency($product->price)
+                    @else
+                      -
+                    @endif
+                  </td>
                   @php
-                      if ($product->quantity >= 1 && $product->quantity<=2) {
-                        $price = $product->product->price;
-                      } elseif ($product->quantity >= 3 && $product->quantity<=5) {
-                        $price = $product->product->price3;
-                      } elseif ($product->quantity >= 6) {
-                        $price = $product->product->price6;
-                      }
-                  @endphp
-                  <td>@currency($price)</td>
-                  @php
-                      $discountItem = $product->disc_rp + (($product->disc_prc/100) * ($price * $product->quantity));
+                      $discountItem = $product->disc_rp + (($product->disc_prc/100) * ($product->price * $product->quantity));
                   @endphp
                   <td>@currency($discountItem)</td>
-                  <td>@currency(($price * $product->quantity)- $discountItem)</td>
+                  <td>@currency(($product->price * $product->quantity)- $discountItem)</td>
               </tr>
                 @endforeach
                 <tr>
-                  <td colspan="5" align="right"><b>Total</b></td>
-                  <td>@currency($transaction->totalSementara)</td>
+                  <td colspan="5" align="right"><b>SubTotal</b></td>
+                  <td>@currency($transaction->total_sementara)</td>
                 </tr>
                 <tr>
-                  <td colspan="5" align="right"><b>Discount</b></td>
+                  <td colspan="5" align="right"><b>- Discount</b></td>
                   @php
-                      $discPercent = ($transaction->disc_total_prc / 100) * $transaction->totalSementara;
+                      $discPercent = ($transaction->disc_total_prc / 100) * $transaction->total_sementara;
                       $discount = $discPercent + $transaction->disc_total_rp;
                   @endphp
                   <td>@currency($discount)</td>
