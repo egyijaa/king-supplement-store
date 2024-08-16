@@ -244,7 +244,7 @@
                     </div>
                     <div class="form-group">
                         <label for="category_id">Kategori Produk</label>
-                        <select name="category_id" id="category_id" class="custom-select @error('category_id') is-invalid @enderror">
+                        <select name="category_id" id="category_id" class="custom-select @error('category_id') is-invalid @enderror" required>
                             <option value="">~ Pilih Kategori Produk ~</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>

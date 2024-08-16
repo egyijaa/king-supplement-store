@@ -104,8 +104,12 @@
                       <p>
                        Temukan berbagai suplemen fitness dan kesehatan seperti Whey protein, creatine, dan lainnya disini. Terlengkap dan terbaik di Pontianak!
                       </p>
+                      @php
+                          $wa = \App\Models\Company::take(1)->first()->whatsapp;
+                          $whatsapp = substr($wa, 1);
+                      @endphp
                       <div class="btn-box">
-                        <a href="https://api.whatsapp.com/send?phone=+6285652400077&text=Halo%20Admin%20Saya%20Mau%20Pesan%20" target="_blank" class="btn-1">
+                        <a href="https://api.whatsapp.com/send?phone=+62{{$whatsapp}}&text=Halo%20Admin%20Saya%20Mau%20Pesan%20" target="_blank" class="btn-1">
                           Pesan Sekarang
                         </a>
                       </div>
@@ -129,7 +133,7 @@
                         Temukan berbagai suplemen fitness dan kesehatan seperti Whey protein, creatine, dan lainnya disini. Terlengkap dan terbaik di Pontianak!
                        </p>
                       <div class="btn-box">
-                        <a href="https://api.whatsapp.com/send?phone=+6285652400077&text=Halo%20Admin%20Saya%20Mau%20Pesan%20" target="_blank" class="btn-1">
+                        <a href="https://api.whatsapp.com/send?phone=+62{{$whatsapp}}&text=Halo%20Admin%20Saya%20Mau%20Pesan%20" target="_blank" class="btn-1">
                           Pesan Sekarang
                         </a>
                       </div>
@@ -153,7 +157,7 @@
                         Temukan berbagai suplemen fitness dan kesehatan seperti Whey protein, creatine, dan lainnya disini. Terlengkap dan terbaik di Pontianak!
                        </p>
                       <div class="btn-box">
-                        <a href="https://api.whatsapp.com/send?phone=+6285652400077&text=Halo%20Admin%20Saya%20Mau%20Pesan%20" target="_blank" class="btn-1">
+                        <a href="https://api.whatsapp.com/send?phone=+62{{$whatsapp}}&text=Halo%20Admin%20Saya%20Mau%20Pesan%20" target="_blank" class="btn-1">
                           Pesan Sekarang
                         </a>
                       </div>
@@ -502,7 +506,7 @@
             </a>
             <a href="">
               <img src="{{ ('landing/images/call-white.png') }}" alt="">
-              <span>085652400077</span>
+              <span>{{ App\Models\Company::take(1)->first()->whatsapp }}</span>
             </a>
           </div>
           <div class="info_social">
@@ -520,7 +524,7 @@
   <!-- end info section -->
 
    <!-- WA float button -->
-    <a href="https://api.whatsapp.com/send?phone=+6285652400077&text=Halo%20Admin%20Saya%20Mau%20Pesan%20" class="float" target="_blank">
+    <a href="https://api.whatsapp.com/send?phone=+62{{$whatsapp}}&text=Halo%20Admin%20Saya%20Mau%20Pesan%20" class="float" target="_blank">
         <i class="fa fa-whatsapp my-float"></i>
     </a>
     {{-- Wa float --}}
