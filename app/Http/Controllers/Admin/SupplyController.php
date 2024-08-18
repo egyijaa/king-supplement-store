@@ -289,7 +289,7 @@ class SupplyController extends Controller
             }
         };
 
-        return view('admin.supply.print1', compact('supply', 'product_supplies', 'jumlah', 'quantity'));
+        return view('admin.supply.print', compact('supply', 'product_supplies', 'jumlah', 'quantity'));
     }
 
     public function storeNew(Request $request)

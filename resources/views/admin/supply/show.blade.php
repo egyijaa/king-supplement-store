@@ -9,6 +9,7 @@
           <div class="card-title">
             <div class="justify-content-between d-flex d-inline">
               <a href="{{ url()->previous() }}"><i class="fas fa-arrow-left"> Kembali</i></a>
+              <a href="{{ route('admin.supply.print', $supply->id) }}" target="_blank"><i class="fas fa-print"></i></a>
             </div>
             <table>
               <tr>
