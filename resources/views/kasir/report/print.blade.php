@@ -78,18 +78,18 @@ th.price {
                        @endphp
                         <td class="description" colspan="2" style="width: 35mm; max-width:35mm;"><div style="font-size: 80%;"> {{ \Illuminate\Support\Str::limit($product->product->name, 33, $end='.') }}</div>
                       
-                        <div style="font-size: 80%">{{ $product->quantity }} x @ {{ format_uang($price)  }}</div>
+                        <div style="font-size: 70%">{{ $product->quantity }} x @ {{ format_uang($price)  }}</div>
                         @if ($product->disc_rp != null || $product->disc_prc != null)
                             <div style="font-size: 70%"> - disc {{format_uang($discountItem)}}</div>
                         @endif <div></div>
                         </td>
-                        <td class="price" style="font-size: 80%; text-align: right">{{ format_uang(($price * $product->quantity)- $discountItem) }}</td>
+                        <td class="price" style="font-size: 70%; text-align: right">{{ format_uang(($price * $product->quantity)- $discountItem) }}</td>
                     </tr>
                         
                     @endforeach
                     @if ($transactionn->disc_total_prc != null || $transactionn->disc_total_rp != null)
                     @php
-                    $discPercent = ($transactionn->disc_total_prc / 100) * $transactionn->totalSementara;
+                    $discPercent = ($transactionn->disc_total_prc / 100) * $transactionn->total_sementara;
                     $discount = $discPercent + $transactionn->disc_total_rp;
                     @endphp
                     <tr style="  border-top: 1px solid black;
