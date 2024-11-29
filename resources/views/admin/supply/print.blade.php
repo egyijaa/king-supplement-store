@@ -69,15 +69,15 @@
                 {{-- <div style="margin: auto; text-align:center;"> --}}
                           <?php 
                           if (strlen($jumlah[$i]['kode']) >=1 && strlen($jumlah[$i]['kode']) <=6) {    
-                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'UPCE',1.3,23,'black', false);
+                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'C39',1.3,23,'black', false);
                           } else if (strlen($jumlah[$i]['kode']) == 7 ) {    
-                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'UPCE',1.2,23,'black', false);
+                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'C39',1.2,23,'black', false);
                           }else if (strlen($jumlah[$i]['kode']) == 8 ) {    
-                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'UPCE',1.1,23,'black', false);
+                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'C39',1.1,23,'black', false);
                           } else if (strlen($jumlah[$i]['kode']) == 9 ) {    
-                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'UPCE',1.02,23,'black', false);
+                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'C39',1.02,23,'black', false);
                           }else if(strlen($jumlah[$i]['kode']) >=10){
-                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'UPCE',0.9,23,'black', false);
+                            echo DNS1D::getBarcodeSVG($jumlah[$i]['kode'], 'C39',0.9,23,'black', false);
                           } 
                         ?>
                    </div>

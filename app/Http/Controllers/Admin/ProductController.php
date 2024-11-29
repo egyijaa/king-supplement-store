@@ -57,7 +57,7 @@ class ProductController extends Controller
             $char = $char.$character;
         }
 
-        $code = $char.$randomNumber;
+        $code = $randomNumber;
 
         if (Product::where('product_code', $code)->exists()) {
         $this->generateUniqueCode();

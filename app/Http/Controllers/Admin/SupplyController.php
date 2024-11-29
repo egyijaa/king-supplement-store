@@ -77,7 +77,7 @@ class SupplyController extends Controller
             $char = $char.$character;
         }
 
-        $code = $char.$randomNumber;
+        $code = $randomNumber;
 
         if (Product::where('product_code', $code)->exists()) {
         $this->generateUniqueCodeProduct();
@@ -108,7 +108,7 @@ class SupplyController extends Controller
             //masukkan dulu data ke tabel produk
             if ($request->product_code == null) {
                 $product = new Product();
-                $product->product_code = $this->generateUniqueCode();
+                $product->product_code = $this->generateUniqueCodeProduct();
             } else {
                 $validatedData = $request->validate([
                     'product_code' => 'required|unique:product'
