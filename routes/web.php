@@ -1,26 +1,27 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\CashierController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\ProfitLossController;
-use App\Http\Controllers\Admin\BestSellingController;
 use App\Http\Controllers\Admin\ProfilController;
 use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SupplyController;
+use App\Http\Controllers\Admin\CashierController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProfitLossController;
+
+
+use App\Http\Controllers\Admin\BestSellingController;
 use App\Http\Controllers\Admin\TransactionController;
-
-
-use App\Http\Controllers\Kasir\DashboardController as KasirDashboardController;
+use App\Http\Controllers\Admin\TransactionNewController;
 use App\Http\Controllers\Kasir\ProfilController as KasirProfilController;
-use App\Http\Controllers\Kasir\ProductController as KasirProductController;
 use App\Http\Controllers\Kasir\ReportController as KasirReportController;
+use App\Http\Controllers\Kasir\ProductController as KasirProductController;
+use App\Http\Controllers\Kasir\DashboardController as KasirDashboardController;
 use App\Http\Controllers\Kasir\TransactionController as KasirTransactionController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,6 +105,23 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin'])->group(f
         Route::get('totalBuy', [TransactionController::class, 'totalBuy'])->name('totalBuy');
         Route::post('pay', [TransactionController::class, 'pay'])->name('pay');
         Route::post('payDirectly', [TransactionController::class, 'payDirectly'])->name('payDirectly');
+    });
+
+    Route::prefix('transaction-new')->name('transaction-new.')->group(function () {
+        Route::get('', [TransactionNewController::class, 'index'])->name('index');
+        Route::get('/api', [TransactionNewController::class, 'indexs'])->name('indexs');
+        Route::post('store', [TransactionNewController::class, 'store'])->name('store');
+        Route::put('update/{id}', [TransactionNewController::class, 'update'])->name('update');
+        Route::delete('delete', [TransactionNewController::class, 'delete'])->name('delete');
+        Route::get('show', [TransactionNewController::class, 'show'])->name('show');
+        Route::get('showLastProduct', [TransactionNewController::class, 'showLastProduct'])->name('showLastProduct');
+        Route::get('getProductCode', [TransactionNewController::class, 'getProductCode'])->name('getProductCode');
+        Route::post('addToCart', [TransactionNewController::class, 'addToCart'])->name('addToCart');
+        Route::delete('deleteLastProduct', [TransactionNewController::class, 'deleteLastProduct'])->name('deleteLastProduct');
+        Route::delete('deleteCart', [TransactionNewController::class, 'deleteCart'])->name('deleteCart');
+        Route::delete('deleteAllCart', [TransactionNewController::class, 'deleteAllCart'])->name('deleteAllCart');
+        Route::get('totalBuy', [TransactionNewController::class, 'totalBuy'])->name('totalBuy');
+        Route::post('pay', [TransactionNewController::class, 'pay'])->name('pay');
     });
 
     Route::prefix('report')->name('report.')->group(function () {

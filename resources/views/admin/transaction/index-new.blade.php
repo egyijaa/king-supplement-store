@@ -8,13 +8,6 @@
     .fa-eye:hover {
         cursor: pointer;
     }
-    .fade {
-    -webkit-transition: opacity 0.01s linear;
-        -moz-transition: opacity 0.01s linear;
-        -ms-transition: opacity 0.01s linear;
-            -o-transition: opacity 0.01s linear;
-            transition: opacity 0.01s linear;
-    }
 </style>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -24,10 +17,8 @@
 <div class="row">
     <div class="col-8">
         <div class="card">
-            <div class="card-header justify-content-between d-flex d-inline">
+          <div class="card-header justify-content-between d-flex d-inline">
                 <h5 class="card-title">Transaksi</h5>
-                <div id="tampil"></div>
-                <div id="txt" style="color: blanchedalmond"></div>
             </div>
             
             <div class="card-body">
@@ -62,7 +53,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col"><small><i>F2 utk edit barang terakhir, F8 utk hapus barang terakhir</i></small></div>
+                    <div class="col"><small><i>F2 utk edit barang terakhir, F8 utk hapus barang terakhir, Shift+F8 Hapus Semua</i></small></div>
                 </div>
                 <div class="table-responsive mt-3">
                     <div class="overflow-auto" style="height:420px;
@@ -93,7 +84,7 @@
                 <h5 class="card-title" id="totalBuy"></h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.transaction.pay') }}" method="post">
+                <form action="{{ route('admin.transaction-new.pay') }}" method="post">
                     @csrf
                     <label>
                         <input type="radio" name="method" id="method" value="offline" checked> Offline
@@ -154,7 +145,7 @@
             </div>
         </div>
     </div>
-</div>
+  </div>
 
 
 <!-- Modal edit -->
@@ -176,10 +167,22 @@
                     <input type="text" class="form-control" id="name-product-edit" disabled>
                 </div>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-4">
                         <div class="form-group">
-                            <label for="get_product_disc_rp" class="control-label">Harga</label>
+                            <label for="get_product_disc_rp" class="control-label">Harga 1</label>
                             <input type="number" class="form-control" id="price-product-edit" disabled>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="get_product_disc_prc" class="control-label">Harga 3</label>
+                            <input type="number" class="form-control" id="price3-product-edit" disabled>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="get_product_disc_prc" class="control-label">Harga 6</label>
+                            <input type="number" class="form-control" id="price6-product-edit" disabled>
                         </div>
                     </div>
                 </div>
@@ -214,32 +217,38 @@
 @endsection
 @push('scripts')
 
-<script>
+  <script>
+      
     $(document).ready(function(){
         $('.js-example-basic-single').select2();
         const totalBuy = document.getElementById('totalBuy');
         function fetchstudent() {
             $.ajax({
                 type: "GET",
-                url: '{{ route('admin.transaction.indexs') }}',
+                url: '{{ route('admin.transaction-new.indexs') }}',
                 dataType: "json",
                 success: function (response) {
-                    // console.log(response);
                     $('tbody').html("");
                     $.each(response.data, function (key, item) {
-                    var harga = item.product.price;
-                    var hargaa = formatRupiah(item.product.price);
-                    var hargaTotal = item.quantity * harga - item.disc_rp - ((item.disc_prc / 100) * (harga * item.quantity));
-                    var formatHargaTotal = formatRupiah(hargaTotal);
+                    if (item.quantity>=1 && item.quantity<=2) {
+                        var harga = item.product.price;
+                    }else if(item.quantity>=3 && item.quantity<=5) {
+                        var harga = item.product.price3;
+                    }else if(item.quantity>=6) {
+                        var harga = item.product.price6;
+                    }
+                    var hargaa = formatRupiah(harga);
+                    var total = item.quantity * harga - item.disc_rp - ((item.disc_prc / 100) * (harga * item.quantity));
+                    var totalRp = formatRupiah(total);
                     let content = `<tr>\
                         <td>${item.product.name}</td>\
                         <td>${item.quantity}</td>\
-                        <td style="background-color:#34495e; color:white; font-size:140%;">${hargaa}</td>\
+                        <td>${hargaa}</td>\
                         <td>${+item.disc_rp + ((item.disc_prc / 100) * (harga * item.quantity)) }</td>\
-                        <td>${formatHargaTotal}</td>\
-                        <td>
-                            <a href="javascript:void(0)" value="${item.id}" data-id="${item.id}" class="btn btn-primary btn-sm edit-btn">EDIT</a>
-                            <button type="button" value="${item.id}" data-id="${item.id}" class="btn btn-danger delete-btn btn-sm">Hapus</button></td>\
+                        <td>${totalRp}</td>\
+                        <td>  <a href="javascript:void(0)" value="${item.id}" data-id="${item.id}" class="btn btn-primary btn-sm edit-btn">EDIT</a>
+                            <button type="button" value="${item.id}" data-id="${item.id}" class="btn btn-danger delete-btn btn-sm">Hapus</button>
+                        </td>\
                     \</tr>`
                     $('tbody').append(content);
                     });
@@ -248,6 +257,7 @@
         }
         fetchstudent();
         getTotalBuy();
+
         let productCode = document.getElementById('get_product_code');
         let productCode2 = document.getElementById('get_product_code2');
         let productName = document.getElementById('get_product_name');
@@ -293,21 +303,17 @@
                 }
             });
 
-            // var map = {}; // You could also use an array
-            // onkeydown = onkeyup = function(e){
-            //     e = e || event; // to deal with IE
-            //     map[e.keyCode] = e.type == 'keydown';
-            //     /* insert conditional here */
-            //     //DELETE ALL PRODUCT IN CART
-            //     if(map[16] && map[119]){ // SHIFT+F8
-            //         deleteAllCart();
-            //         map = {};
-            //     }else if(map[16] && map[120]){ // shift+f9 utk langsung bayar (pegen cepat)
-            //         $('#tPaymentDirectly').trigger('click');
-            //         map = {};
-            //     }
-
-            // }
+            var map = {}; // You could also use an array
+            onkeydown = onkeyup = function(e){
+                e = e || event; // to deal with IE
+                map[e.keyCode] = e.type == 'keydown';
+                /* insert conditional here */
+                //DELETE ALL PRODUCT IN CART
+                if(map[16] && map[119]){ // SHIFT+F8
+                    deleteAllCart();
+                    map = {};
+                }
+            }
         });
         
         addToCart.addEventListener('click', function() {
@@ -327,7 +333,7 @@
                     type: 'POST',
                     dataType: 'json',
                     data: {'product_code':$productCode.val()},
-                    url: '{{ route('admin.transaction.addToCart') }}',
+                    url: '{{ route('admin.transaction-new.addToCart') }}',
                     success: function(data){
                         $('#get_product_code').val('');
                         $('.js-example-basic-single').val(0).trigger('change.select2');
@@ -356,16 +362,20 @@
                     type: 'GET',
                     dataType: 'json',
                     data: {'id':id},
-                    url: '{{ route('admin.transaction.showLastProduct') }}',
+                    url: '{{ route('admin.transaction-new.showLastProduct') }}',
                     success:function(response){
 
                         //fill data to form
                         $('#productTransaction_id').val(response.data.id);
+                        
                         $('#name-product-edit').val(response.data.product.name);
                         $('#price-product-edit').val(response.data.product.price);
+                        $('#price3-product-edit').val(response.data.product.price3);
+                        $('#price6-product-edit').val(response.data.product.price6);
                         $('#quantity-edit').val(response.data.quantity);
                         $('#get_product_disc_rp').val(response.data.disc_rp);
                         $('#get_product_disc_prc').val(response.data.disc_prc);
+                        
 
                         //open modal
                         $('#modal-edit').modal('show');
@@ -389,7 +399,7 @@
                     type: 'DELETE',
                     dataType: 'json',
                     data: {'id':id},
-                    url: '{{ route('admin.transaction.deleteLastProduct') }}',
+                    url: '{{ route('admin.transaction-new.deleteLastProduct') }}',
                     success: function(data){
                         fetchstudent();
                         getTotalBuy();
@@ -412,7 +422,7 @@
                     type: 'DELETE',
                     dataType: 'json',
                     data: {'id':id},
-                    url: '{{ route('admin.transaction.deleteAllCart') }}',
+                    url: '{{ route('admin.transaction-new.deleteAllCart') }}',
                     success: function(data){
                         fetchstudent();
                         getTotalBuy();
@@ -438,7 +448,7 @@
                     type: 'DELETE',
                     dataType: 'json',
                     data: {'id':id},
-                    url: '{{ route('admin.transaction.deleteCart') }}',
+                    url: '{{ route('admin.transaction-new.deleteCart') }}',
                 });
                 fetchstudent();
                 getTotalBuy();
@@ -453,13 +463,15 @@
                     type: 'GET',
                     dataType: 'json',
                     data: {'id':id},
-                    url: '{{ route('admin.transaction.show') }}',
+                    url: '{{ route('admin.transaction-new.show') }}',
                     success:function(response){
 
                         //fill data to form
                         $('#productTransaction_id').val(response.data.id);
                         $('#name-product-edit').val(response.data.product.name);
                         $('#price-product-edit').val(response.data.product.price);
+                        $('#price3-product-edit').val(response.data.product.price3);
+                        $('#price6-product-edit').val(response.data.product.price6);
                         $('#quantity-edit').val(response.data.quantity);
                         $('#get_product_disc_rp').val(response.data.disc_rp);
                         $('#get_product_disc_prc').val(response.data.disc_prc);
@@ -495,7 +507,7 @@
             //ajax
             $.ajax({
 
-                url: `/admin/transaction/update/${productTransaction_id}`,
+                url: `/admin/transaction-new/update/${productTransaction_id}`,
                 type: "PUT",
                 cache: false,
                 data: {
@@ -521,20 +533,25 @@
             })
         });
 
-
-        /////
-
         const productQuantity = document.getElementById('get_product_quantity');
         const productDiscRp = document.getElementById('get_product_disc_rp');
         const productDiscPrc = document.getElementById('get_product_disc_prc');
         
-        [productQuantity].map(element => element.addEventListener('input', function(){        
-        // let productPrice = document.getElementById('get_product_price');
-        // let productTotal = document.getElementById('get_product_total');
+        [productQuantity, productDiscRp, productDiscPrc].map(element => element.addEventListener('input', function(){        
+        let productPrice = document.getElementById('get_product_price');
+        let productPrice3 = document.getElementById('get_product_price3');
+        let productPrice6 = document.getElementById('get_product_price6');
+        let productPriceDe = document.getElementById('get_product_priceDe');
+        let productTotal = document.getElementById('get_product_total');
 
-        productPrice.value=productPrice.value;
-                   
-
+        if(productQuantity.value>=1 && productQuantity.value<=2) {
+                            productPrice.value=productPriceDe.value;
+                        }
+                        else if(productQuantity.value>=3 && productQuantity.value<=5){
+                            productPrice.value=productPrice3.value;
+                        }else if(productQuantity.value>=6){
+                            productPrice.value=productPrice6.value;
+                        }
         let hasilDiscPrc = (productDiscPrc.value / 100) * (productPrice.value * productQuantity.value);
         let total = productPrice.value * productQuantity.value - productDiscRp.value - hasilDiscPrc;
         productTotal.value = total;
@@ -549,7 +566,7 @@
         function getTotalBuy(){
             $.ajax({
                 type: 'GET',
-                url: '{{ route('admin.transaction.totalBuy') }}',
+                url: '{{ route('admin.transaction-new.totalBuy') }}',
                 dataType: 'json',
                 success: function(data){
                     let totalBuy = document.getElementById('totalBuy');
@@ -585,7 +602,7 @@
         [totalDiscRp, totalDiscPrc].map(element => element.addEventListener('input', function(){  
             $.ajax({
                 type: 'GET',
-                url: '{{ route('admin.transaction.totalBuy') }}',
+                url: '{{ route('admin.transaction-new.totalBuy') }}',
                 dataType: 'json',
                 success: function(data){
                     let totalBuy = document.getElementById('totalBuy');
@@ -620,6 +637,23 @@
 			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
 		}
 
+        // let payment = document.getElementById('payment');
+        // payment.addEventListener('keyup', function() {
+        //     let tPayment = document.getElementById('tPayment');
+        //     let vReturn = document.getElementById('return');
+        //     let totalBuy = document.getElementById('totalBuy');
+        //     let split = totalBuy.innerHTML.split(' ');
+        //     if(split[2] == 0){
+        //         alert('Belum ada pesanan');
+        //     }
+        //     let result = parseInt(this.value) - split[2].replace('.','') ;
+        //     if(result >= 0) {
+        //         tPayment.disabled = false;
+        //     }else{
+        //         tPayment.disabled = true;
+        //     }
+        //     vReturn.value = result;
+        // })
         var payment = document.getElementById('payment');
         [payment].map(element => element.addEventListener('input', function(){  
             hitung();
@@ -630,7 +664,7 @@
             let vReturn = document.getElementById('return');
             let totalBuy = document.getElementById('totalBuy');
             let split = totalBuy.innerHTML.split(' ');
-            if(split[2] <= 0){
+            if(split[2] == 0){
                 alert('Belum ada pesanan');
             }
             let split1 = split[2].replace('.','');
@@ -643,79 +677,27 @@
             }
             vReturn.value = result;
         }
+
+        // let diskonRupiah = document.getElementById('get_total_disc_rp');
+        // diskonRupiah.addEventListener('keyup', function() {
+           
+        //     let tPayment = document.getElementById('tPayment');
+        //     let vReturn = document.getElementById('return');
+        //     let totalBuy = document.getElementById('totalBuy');
+        //     let split = totalBuy.innerHTML.split(' ');
+        //     console.log(split[2].replace('.',''));
+        //     if(split[2] == 0){
+        //         alert('Belum ada pesanan');
+        //     }
+        //     let result = parseInt(payment.value) - split[2].replace('.','') ;
+        //     if(result >= 0) {
+        //         tPayment.disabled = false;
+        //     }else{
+        //         tPayment.disabled = true;
+        //     }
+        //     vReturn.value = result;
+        // })
     })     
-
-    //jam digital
-    function startTime() {
-        const today = new Date();
-        let h = today.getHours();
-        let m = today.getMinutes();
-        let s = today.getSeconds();
-        m = checkTime(m);
-        s = checkTime(s);
-        document.getElementById('txt').innerHTML =  h + ":" + m + ":" + s;
-        setTimeout(startTime, 1000);
-    }
-
-    function checkTime(i) {
-        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-        return i;
-    }
     
   </script>
-
-<script>
-    var date = new Date();
-    var tahun = date.getFullYear();
-    var bulan = date.getMonth();
-    var tanggal = date.getDate();
-    var hari = date.getDay();
-    var jam = date.getHours();
-    var menit = date.getMinutes();
-    var detik = date.getSeconds();
-    switch(hari) {
-        case 0: hari = "Minggu"; break;
-        case 1: hari = "Senin"; break;
-        case 2: hari = "Selasa"; break;
-        case 3: hari = "Rabu"; break;
-        case 4: hari = "Kamis"; break;
-        case 5: hari = "Jum'at"; break;
-        case 6: hari = "Sabtu"; break;
-    }
-    switch(bulan) {
-        case 0: bulan = "Januari"; break;
-        case 1: bulan = "Februari"; break;
-        case 2: bulan = "Maret"; break;
-        case 3: bulan = "April"; break;
-        case 4: bulan = "Mei"; break;
-        case 5: bulan = "Juni"; break;
-        case 6: bulan = "Juli"; break;
-        case 7: bulan = "Agustus"; break;
-        case 8: bulan = "September"; break;
-        case 9: bulan = "Oktober"; break;
-        case 10: bulan = "November"; break;
-        case 11: bulan = "Desember"; break;
-    }
-    var tampilTanggal = "" + hari + ", " + tanggal + " " + bulan + " " + tahun;
-
-    document.getElementById("tampil").innerHTML = tampilTanggal;
-</script>
-
-<script>
-//auto refresh saat tdk ada presskey atau mouseover
- var time = new Date().getTime();
- $(document.body).bind("mousemove keypress", function(e) {
-     time = new Date().getTime();
- });
-
- function refresh() {
-     if(new Date().getTime() - time >= 120000) 
-         window.location.reload(true);
-     else 
-         setTimeout(refresh, 10000);
- }
-
- setTimeout(refresh, 10000);
-</script>
-
 @endpush

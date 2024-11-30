@@ -54,8 +54,14 @@
               <p>Produk</p>
             </a>
           </li>
-          <li class="nav-item {{ request()->is('admin/transaction') ?'active' : '' }}">
+          {{-- <li class="nav-item {{ request()->is('admin/transaction') ?'active' : '' }}">
             <a href="{{ route('admin.transaction.index') }}">
+              <i class="now-ui-icons shopping_cart-simple"></i>
+              <p>Transaksi</p>
+            </a>
+          </li> --}}
+          <li class="nav-item {{ request()->is('admin/transaction-new') ?'active' : '' }}">
+            <a href="{{ route('admin.transaction-new.index') }}">
               <i class="now-ui-icons shopping_cart-simple"></i>
               <p>Transaksi</p>
             </a>
