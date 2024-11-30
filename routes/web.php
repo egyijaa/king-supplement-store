@@ -67,6 +67,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin'])->group(f
         Route::post('store', [ProductController::class, 'store'])->name('store');
         Route::put('update', [ProductController::class, 'update'])->name('update');
         Route::delete('delete', [ProductController::class, 'delete'])->name('delete');
+        Route::put('cetak-barcode', [ProductController::class, 'print'])->name('printBarcode');
     });
     Route::prefix('profit-loss')->name('profit-loss.')->group(function () {
         Route::get('', [ProfitLossController::class, 'index'])->name('index');

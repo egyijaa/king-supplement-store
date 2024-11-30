@@ -14,37 +14,24 @@
             </button>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.product.index') }}">
+                    <form action="{{ route('admin.product.index') }}">
             
                 <div class="row">
                         <div class="col-4">
-                            <label for="search_product">Cari Nama Barang/Barcode:</label>
+                            <label for="search_product">Cari Kode Produk / Nama :</label>
                             <input type="text" id="search_product" name="search_product" value="{{Request::get('search_product')}}" class="form-control" autofocus>
                         </div>
-                        <div class="col-3">
-                            <label for="search_product">Cari Kategori:</label>
-                            <select name="category_search" id="category_search" class="custom-select form-control">
-                                <option value="">~ Pilih Kategori ~</option>
-                                @foreach($categories as $c)
-                                    <option value="{{ $c->name }}" {{ Request::get('category_search') == $c->name ? 'selected' : '' }}>{{ $c->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <input type="submit" value="Cari" class="btn btn-primary text-white">
+                        <div class="col-4 mt-3">
+                            <input type="submit" value="Cari" class="btn btn-primary btn-sm text-white">
                         </div>
                 </div>
-            @if (Request::get('category_search'))
-            <p>Menampilkan Pencarian Kategori : <b>{{ Request::get('category_search') }}</b></p>
-            @endif
             </form>
             <form action="{{ route('admin.product.index') }}">
-                <input type="submit" value="Lihat Semua" class="btn btn-warning text-white">
+                <input type="submit" value="Lihat Semua Data" class="btn btn-warning text-white">
             </form>
-
           <div class="table-responsive">
             <table class="table table-bordered">
-              <thead class="text-primary">
+              <thead class=" text-primary">
                 <tr>
                     <td>
                         No.
@@ -59,10 +46,8 @@
                       Stok
                     </td>
                     <td>
-                        Harga Modal
-                      </td>
-                    <td> Harga Jual</td>
-                    <td style="width: 10%">Kategori</td>
+                      Harga 1 | 3 | 6
+                    </td>
                     <td>
                       Aksi
                     </td>
@@ -72,23 +57,22 @@
                   <?php 
                     $i = 1;
                     ?>
-                  @foreach($products as $product)
-                  <tr>
-                      <td>{{($products->currentPage() - 1) * $products->perPage() + $loop->iteration}}</td>
-                      <td>{{ $product->product_code }}</td>
-                      <td>{{ $product->name }}</td>
-                      <td>{{ $product->quantity }}</td>
-                      <td style="color: Orange"><b>@currency($product->capital_price)</b></td>
-                      <td><b>@currency($product->price)</b></td>
-                      <td>{{ $product->category->name }}</td>
-                      <td>
-                          <a href="#" data-id="{{ $product->id }}" data-name="{{ $product->name }}"
-                            data-code="{{ $product->product_code }}" data-quantity="{{ $product->quantity }}" data-price="{{ $product->price }}" data-category="{{ $product->category_id }}" data-capitalprice="{{ $product->capital_price }}"  data-toggle="modal" data-target="#edit"><i class="fas fa-edit"></i></a>
-                          <a href="#" data-target="#delete" data-toggle="modal" data-id="{{ $product->id }}" data-name="{{ $product->name }}"><i class="fas fa-trash"></i></a>
-                      </td>
+                @foreach($products as $key => $product)
+                <tr>
+                    <td>{{ $products->firstItem() + $key }}</td>
+                    <td>{{ $product->product_code }}</td>
+                    <td>{{ $product->name }}</td>
+                    <td>{{ $product->quantity }}</td>
+                    <td>@currency($product->price) x1 <br> @currency($product->price3) x3 <br> @currency($product->price6) x6</td>
+                    <td>
+                        <a href="#" data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                        data-code="{{ $product->product_code }}" data-quantity="{{ $product->quantity }}" data-modal="{{ $product->modal }}" data-price="{{ $product->price }}" data-price3="{{ $product->price3 }}" data-price6="{{ $product->price6 }}" data-category="{{ $product->category_id }}"  data-toggle="modal" data-target="#edit"><i class="fas fa-edit"></i></a>
+                        <a href="#" data-target="#delete" data-toggle="modal" data-id="{{ $product->id }}"><i class="fas fa-trash"></i></a>
+                        <a href="#" data-id="{{ $product->id }}" data-toggle="modal" data-target="#print"><i class="fas fa-print"></i></a>
+                    </td>
                   </tr>
                   @endforeach
-                </tbody>
+              </tbody>
             </table>
             {{  $products->appends(request()->input())->links()}}
           </div>
@@ -145,7 +129,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="quantity">Stok</label>
+                        <label for="quantity">Jumlah</label>
                         <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" required autocomplete="off">
                         @error('quantity')
                         <div class="invalid-feedback">
@@ -154,22 +138,48 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="price">Harga Jual</label>
-                        <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" required autocomplete="off">
-                        @error('price')
+                        <label for="modal">Harga Modal</label>
+                        <input type="number" class="form-control @error('modal') is-invalid @enderror" id="modal" name="modal" autocomplete="off">
+                        @error('modal')
                         <div class="invalid-feedback">
                             {{$message}}
                         </div>
                         @enderror
                     </div>
-                    <div class="form-group">
-                        <label for="capital_price">Harga Modal</label>
-                        <input type="number" class="form-control @error('price') is-invalid @enderror" id="capital_price" name="capital_price" value="{{ old('capital_price') }}" required autocomplete="off">
-                        @error('capital_price')
-                        <div class="invalid-feedback">
-                            {{$message}}
+                    <div class="row input_fields_wrap">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="price">Harga 1</label>
+                                <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" required autocomplete="off">
+                                @error('price')
+                                <div class="invalid-feedback">
+                                    {{$message}}
+                                </div>
+                                @enderror
+                            </div>
                         </div>
-                        @enderror
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="price3">Harga 3</label>
+                                <input type="number" class="form-control @error('price3') is-invalid @enderror" id="price3" name="price3" required autocomplete="off">
+                                @error('price3')
+                                <div class="invalid-feedback">
+                                    {{$message}}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="price6">Harga 6</label>
+                                <input type="number" class="form-control @error('price6') is-invalid @enderror" id="price6" name="price6" required autocomplete="off">
+                                @error('price6')
+                                <div class="invalid-feedback">
+                                    {{$message}}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
              
                 </div>
@@ -196,11 +206,51 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="textDelete"></div>
+                    Apakah Anda yakin ingin menghapus Data Produk ini ?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="print" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{{ route('admin.product.printBarcode') }}" method="POST">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="id">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span>Print</span>Barcode</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+               
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="banyak">Berapa Stiker?</label>
+                        <select name="banyak" id="banyak">
+                            <option value="1">3</option>
+                            <option value="2">6</option>
+                            <option value="3">9</option>
+                            <option value="4">12</option>
+                            <option value="5">15</option>
+                            <option value="6">18</option>
+                            <option value="7">21</option>
+                            <option value="8">24</option>
+                            <option value="9">27</option>
+                            <option value="10">30</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
@@ -222,11 +272,11 @@
                 </div>
                 <div class="modal-body">
                     <label>
-                        <input type="checkbox" name="otomatic" id="otomatic"><a style="color: orange" data-toggle="tooltip" title="Centang jika ingin membuat kode produk otomatis, dan kode produk tidak perlu diisi"> Kode Produk otomatis</a> 
+                        <input type="checkbox" name="otomatic" id="otomatic" value="yes" checked><a style="color: orange" data-toggle="tooltip" title="Centang jika ingin membuat kode produk otomatis, dan kode produk tidak perlu diisi"> Kode Produk otomatis</a> 
                     </label>
                     <div class="form-group">
                         <label for="product_code">Kode Produk</label>
-                        <input type="text" class="form-control @error('product_code') is-invalid @enderror" id="product_code" name="product_code" value="{{ old('product_code') }}" autocomplete="off" autofocus>
+                        <input type="text" class="form-control @error('product_code') is-invalid @enderror" id="product_code" name="product_code" value="{{ old('product_code') }}" autocomplete="off">
                         @error('product_code')
                         <div class="invalid-feedback">
                             {{$message}}
@@ -257,7 +307,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="quantity">Stok</label>
+                        <label for="quantity">Jumlah</label>
                         <input type="number" class="form-control @error('quantity') is-invalid @enderror" id="quantity" name="quantity" value="0" required autocomplete="off">
                         @error('quantity')
                         <div class="invalid-feedback">
@@ -266,22 +316,48 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="price">Harga Jual</label>
-                        <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price') }}" required autocomplete="off">
-                        @error('price')
+                        <label for="modal">Harga Modal</label>
+                        <input type="number" class="form-control @error('modal') is-invalid @enderror" id="modal" name="modal" value="{{ old('modal') }}" autocomplete="off">
+                        @error('modal')
                         <div class="invalid-feedback">
                             {{$message}}
                         </div>
                         @enderror
                     </div>
-                    <div class="form-group">
-                        <label for="price">Harga Modal</label>
-                        <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="capital_price" value="{{ old('capital_price') }}" required autocomplete="off">
-                        @error('capital_price')
-                        <div class="invalid-feedback">
-                            {{$message}}
+                    <div class="row input_fields_wrap">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="price">Harga 1</label>
+                                <input type="number" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price') }}" required autocomplete="off">
+                                @error('price')
+                                <div class="invalid-feedback">
+                                    {{$message}}
+                                </div>
+                                @enderror
+                            </div>
                         </div>
-                        @enderror
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="price3">Harga 3</label>
+                                <input type="number" class="form-control @error('price3') is-invalid @enderror" id="price3" name="price3" value="{{ old('price3') }}" required autocomplete="off">
+                                @error('price3')
+                                <div class="invalid-feedback">
+                                    {{$message}}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="price6">Harga 6</label>
+                                <input type="number" class="form-control @error('price6') is-invalid @enderror" id="price6" name="price6" value="{{ old('price6') }}" required autocomplete="off">
+                                @error('price6')
+                                <div class="invalid-feedback">
+                                    {{$message}}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -299,38 +375,38 @@
     $('[data-toggle="tooltip"]').tooltip();
     });
 
-    $(document).ready(function(){
-        $("#tambah").on('shown.bs.modal', function(){
-            $(this).find('#product_code').focus();
-        });
-    });
-
-
     $("#edit").on('show.bs.modal', (e) => {
         var id = $(e.relatedTarget).data('id');
         var code = $(e.relatedTarget).data('code');
         var name = $(e.relatedTarget).data('name');
         var quantity = $(e.relatedTarget).data('quantity');
+        var modal = $(e.relatedTarget).data('modal');
         var price = $(e.relatedTarget).data('price');
+        var price3 = $(e.relatedTarget).data('price3');
+        var price6 = $(e.relatedTarget).data('price6');
         var category = $(e.relatedTarget).data('category');
-        var capitalprice = $(e.relatedTarget).data('capitalprice');
         
         $('#edit').find('input[name="id"]').val(id);
         $('#edit').find('input[name="product_code"]').val(code);
         $('#edit').find('input[name="name"]').val(name);
         $('#edit').find('input[name="quantity"]').val(quantity);
+        $('#edit').find('input[name="modal"]').val(modal);
         $('#edit').find('input[name="price"]').val(price);
+        $('#edit').find('input[name="price3"]').val(price3);
+        $('#edit').find('input[name="price6"]').val(price6);
         $('#edit').find('select[name="category_id"]').val(category);
-        $('#edit').find('input[name="capital_price"]').val(capitalprice);
     });
     
     $('#delete').on('show.bs.modal', (e) => {
         var id = $(e.relatedTarget).data('id');
-        var name = $(e.relatedTarget).data('name');
         console.log(id);
         $('#delete').find('input[name="id"]').val(id);
-        document.getElementById("textDelete").innerHTML = 'Yakin ingin menghapus <b>' + name + '</b>? <br> Barang yang telah dihapus tidak dapat dikembalikan lagi';
+    });
 
+    $("#print").on('show.bs.modal', (e) => {
+        var id = $(e.relatedTarget).data('id');
+
+        $('#print').find('input[name="id"]').val(id);
     });
 </script>
 @endpush
