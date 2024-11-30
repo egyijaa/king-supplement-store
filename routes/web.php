@@ -21,7 +21,7 @@ use App\Http\Controllers\Kasir\ProfilController as KasirProfilController;
 use App\Http\Controllers\Kasir\ReportController as KasirReportController;
 use App\Http\Controllers\Kasir\ProductController as KasirProductController;
 use App\Http\Controllers\Kasir\DashboardController as KasirDashboardController;
-use App\Http\Controllers\Kasir\TransactionController as KasirTransactionController;
+use App\Http\Controllers\Kasir\TransactionNewController as KasirTransactionNewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,23 +89,23 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin'])->group(f
         Route::post('storeNew', [SupplyController::class, 'storeNew'])->name('storeNew');
         Route::put('update', [SupplyController::class, 'update'])->name('update');
     });
-    Route::prefix('transaction')->name('transaction.')->group(function () {
-        Route::get('', [TransactionController::class, 'index'])->name('index');
-        Route::get('/api', [TransactionController::class, 'indexs'])->name('indexs');
-        Route::post('store', [TransactionController::class, 'store'])->name('store');
-        Route::put('update/{id}', [TransactionController::class, 'update'])->name('update');
-        Route::delete('delete', [TransactionController::class, 'delete'])->name('delete');
-        Route::get('show', [TransactionController::class, 'show'])->name('show');
-        Route::get('showLastProduct', [TransactionController::class, 'showLastProduct'])->name('showLastProduct');
-        Route::get('getProductCode', [TransactionController::class, 'getProductCode'])->name('getProductCode');
-        Route::post('addToCart', [TransactionController::class, 'addToCart'])->name('addToCart');
-        Route::delete('deleteLastProduct', [TransactionController::class, 'deleteLastProduct'])->name('deleteLastProduct');
-        Route::delete('deleteCart', [TransactionController::class, 'deleteCart'])->name('deleteCart');
-        Route::delete('deleteAllCart', [TransactionController::class, 'deleteAllCart'])->name('deleteAllCart');
-        Route::get('totalBuy', [TransactionController::class, 'totalBuy'])->name('totalBuy');
-        Route::post('pay', [TransactionController::class, 'pay'])->name('pay');
-        Route::post('payDirectly', [TransactionController::class, 'payDirectly'])->name('payDirectly');
-    });
+    // Route::prefix('transaction')->name('transaction.')->group(function () {
+    //     Route::get('', [TransactionController::class, 'index'])->name('index');
+    //     Route::get('/api', [TransactionController::class, 'indexs'])->name('indexs');
+    //     Route::post('store', [TransactionController::class, 'store'])->name('store');
+    //     Route::put('update/{id}', [TransactionController::class, 'update'])->name('update');
+    //     Route::delete('delete', [TransactionController::class, 'delete'])->name('delete');
+    //     Route::get('show', [TransactionController::class, 'show'])->name('show');
+    //     Route::get('showLastProduct', [TransactionController::class, 'showLastProduct'])->name('showLastProduct');
+    //     Route::get('getProductCode', [TransactionController::class, 'getProductCode'])->name('getProductCode');
+    //     Route::post('addToCart', [TransactionController::class, 'addToCart'])->name('addToCart');
+    //     Route::delete('deleteLastProduct', [TransactionController::class, 'deleteLastProduct'])->name('deleteLastProduct');
+    //     Route::delete('deleteCart', [TransactionController::class, 'deleteCart'])->name('deleteCart');
+    //     Route::delete('deleteAllCart', [TransactionController::class, 'deleteAllCart'])->name('deleteAllCart');
+    //     Route::get('totalBuy', [TransactionController::class, 'totalBuy'])->name('totalBuy');
+    //     Route::post('pay', [TransactionController::class, 'pay'])->name('pay');
+    //     Route::post('payDirectly', [TransactionController::class, 'payDirectly'])->name('payDirectly');
+    // });
 
     Route::prefix('transaction-new')->name('transaction-new.')->group(function () {
         Route::get('', [TransactionNewController::class, 'index'])->name('index');
@@ -154,22 +154,39 @@ Route::prefix('kasir')->name('kasir.')->middleware(['auth', 'isCashier'])->group
         Route::get('', [KasirProductController::class, 'index'])->name('index');
     });
 
-    Route::prefix('transaction')->name('transaction.')->group(function () {
-        Route::get('', [KasirTransactionController::class, 'index'])->name('index');
-        Route::get('/api', [KasirTransactionController::class, 'indexs'])->name('indexs');
-        Route::post('store', [KasirTransactionController::class, 'store'])->name('store');
-        Route::put('update/{id}', [KasirTransactionController::class, 'update'])->name('update');
-        Route::delete('delete', [KasirTransactionController::class, 'delete'])->name('delete');
-        Route::get('show', [KasirTransactionController::class, 'show'])->name('show');
-        Route::get('showLastProduct', [KasirTransactionController::class, 'showLastProduct'])->name('showLastProduct');
-        Route::get('getProductCode', [KasirTransactionController::class, 'getProductCode'])->name('getProductCode');
-        Route::post('addToCart', [KasirTransactionController::class, 'addToCart'])->name('addToCart');
-        Route::delete('deleteLastProduct', [KasirTransactionController::class, 'deleteLastProduct'])->name('deleteLastProduct');
-        Route::delete('deleteCart', [KasirTransactionController::class, 'deleteCart'])->name('deleteCart');
-        Route::delete('deleteAllCart', [KasirTransactionController::class, 'deleteAllCart'])->name('deleteAllCart');
-        Route::get('totalBuy', [KasirTransactionController::class, 'totalBuy'])->name('totalBuy');
-        Route::post('pay', [KasirTransactionController::class, 'pay'])->name('pay');
-        Route::post('payDirectly', [KasirTransactionController::class, 'payDirectly'])->name('payDirectly');
+    // Route::prefix('transaction')->name('transaction.')->group(function () {
+    //     Route::get('', [KasirTransactionController::class, 'index'])->name('index');
+    //     Route::get('/api', [KasirTransactionController::class, 'indexs'])->name('indexs');
+    //     Route::post('store', [KasirTransactionController::class, 'store'])->name('store');
+    //     Route::put('update/{id}', [KasirTransactionController::class, 'update'])->name('update');
+    //     Route::delete('delete', [KasirTransactionController::class, 'delete'])->name('delete');
+    //     Route::get('show', [KasirTransactionController::class, 'show'])->name('show');
+    //     Route::get('showLastProduct', [KasirTransactionController::class, 'showLastProduct'])->name('showLastProduct');
+    //     Route::get('getProductCode', [KasirTransactionController::class, 'getProductCode'])->name('getProductCode');
+    //     Route::post('addToCart', [KasirTransactionController::class, 'addToCart'])->name('addToCart');
+    //     Route::delete('deleteLastProduct', [KasirTransactionController::class, 'deleteLastProduct'])->name('deleteLastProduct');
+    //     Route::delete('deleteCart', [KasirTransactionController::class, 'deleteCart'])->name('deleteCart');
+    //     Route::delete('deleteAllCart', [KasirTransactionController::class, 'deleteAllCart'])->name('deleteAllCart');
+    //     Route::get('totalBuy', [KasirTransactionController::class, 'totalBuy'])->name('totalBuy');
+    //     Route::post('pay', [KasirTransactionController::class, 'pay'])->name('pay');
+    //     Route::post('payDirectly', [KasirTransactionController::class, 'payDirectly'])->name('payDirectly');
+    // });
+
+    Route::prefix('transaction-new')->name('transaction-new.')->group(function () {
+        Route::get('', [KasirTransactionNewController::class, 'index'])->name('index');
+        Route::get('/api', [KasirTransactionNewController::class, 'indexs'])->name('indexs');
+        Route::post('store', [KasirTransactionNewController::class, 'store'])->name('store');
+        Route::put('update/{id}', [KasirTransactionNewController::class, 'update'])->name('update');
+        Route::delete('delete', [KasirTransactionNewController::class, 'delete'])->name('delete');
+        Route::get('show', [KasirTransactionNewController::class, 'show'])->name('show');
+        Route::get('showLastProduct', [KasirTransactionNewController::class, 'showLastProduct'])->name('showLastProduct');
+        Route::get('getProductCode', [KasirTransactionNewController::class, 'getProductCode'])->name('getProductCode');
+        Route::post('addToCart', [KasirTransactionNewController::class, 'addToCart'])->name('addToCart');
+        Route::delete('deleteLastProduct', [KasirTransactionNewController::class, 'deleteLastProduct'])->name('deleteLastProduct');
+        Route::delete('deleteCart', [KasirTransactionNewController::class, 'deleteCart'])->name('deleteCart');
+        Route::delete('deleteAllCart', [KasirTransactionNewController::class, 'deleteAllCart'])->name('deleteAllCart');
+        Route::get('totalBuy', [KasirTransactionNewController::class, 'totalBuy'])->name('totalBuy');
+        Route::post('pay', [KasirTransactionNewController::class, 'pay'])->name('pay');
     });
 
     Route::prefix('report')->name('report.')->group(function () {

@@ -23,7 +23,7 @@
                 <center>
                 <h5>{{ $company->name }}</h5>
                 <h5>{{ $company->address }}</h5>
-                <h5>{{ $company->whatsapp }}</h5>
+                {{-- <h5>{{ $company->whatsapp }}</h5> --}}
                 </center>
             </div>
         </div>
@@ -45,10 +45,10 @@
                         <label for="address">Alamat</label>
                         <input type="text" class="form-control" id="address" name="address" required>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="whatsapp">No Kontak Whatsapp (cth: 084321XXXXXX)</label>
                         <input type="text" class="form-control" id="whatsapp" name="whatsapp" required>
-                    </div>
+                    </div> --}}
                     <hr>
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit">Simpan</button>
