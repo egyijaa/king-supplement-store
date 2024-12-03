@@ -274,6 +274,16 @@ class TransactionNewController extends Controller
                 $transaction->method = $request->method;
                 $transaction->save();
 
+                //kurangi quantity ke product saat checkout
+                $cart = ProductTransaction::where('status', '0')->where('user_id', auth()->user()->id)->pluck('id');
+                for($i = 0; $i < count($cart); $i++){
+                    $getQuantity = ProductTransaction::where('id', $cart[$i])->first()->quantity;
+                    $getProductId = ProductTransaction::where('id', $cart[$i])->first()->product_id;
+                    $produk = Product::find($getProductId);
+                    $quantity = $produk->quantity - $getQuantity;
+                    $produk->update(['quantity' => $quantity]);
+                }
+
                 $productTransaction->update([
                     'transaction_id' => $transaction->id,
                     'status' => '1',
