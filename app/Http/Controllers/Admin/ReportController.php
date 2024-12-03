@@ -8,7 +8,6 @@ use App\Models\Transaction;
 use App\Models\Product;
 use Facade\Ignition\Tabs\Tab;
 use Illuminate\Http\Request;
-use Carbon;
 
 class ReportController extends Controller
 {
@@ -16,40 +15,41 @@ class ReportController extends Controller
     {
         $fromDate = $request->get('from_date');
         $toDate = $request->get('to_date');
-        if ($fromDate) {
+        if ($fromDate){
             $transactions = Transaction::whereRaw(
                 "(created_at >= ? AND created_at <= ?)", 
                 [
                    $fromDate ." 00:00:00", 
                    $toDate ." 23:59:59"
                 ]
-              )->get();
+              )->orderBy('id', 'DESC')->get();
+
             $total_earn = Transaction::whereRaw(
                 "(created_at >= ? AND created_at <= ?)", 
                 [
                    $fromDate ." 00:00:00", 
                    $toDate ." 23:59:59"
                 ]
-            )->sum('purchase_order');
-        } else {
+              )->sum('purchase_order');
+        }
+        else {
             $transactions = Transaction::whereDate('created_at', date('Y-m-d'))->orderBy('id', 'DESC')->get();
             $total_earn = Transaction::whereDate('created_at', date('Y-m-d'))->sum('purchase_order');
         }
         
-        return view('admin.report.index', compact('transactions', 'total_earn'));
+        return view('admin.report.report-new.index', compact('transactions', 'total_earn'));
     }
-
     public function show($id)
     {
         $transaction = Transaction::find($id);
         $productTransactions = ProductTransaction::where('transaction_id', $transaction->id)->get();
-        return view('admin.report.show', compact('transaction','productTransactions'));
+        return view('admin.report.report-new.show', compact('transaction','productTransactions'));
     }
     public function print($id)
     {
         $transactionn = Transaction::find($id);
         $productTransactions = ProductTransaction::where('transaction_id', $transactionn->id)->get();
-        return view('admin.report.print', compact('transactionn','productTransactions'));
+        return view('admin.report.report-new.test2', compact('transactionn','productTransactions'));
     }
     public function delete(Request $request)
     {
