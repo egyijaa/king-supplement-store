@@ -11,8 +11,8 @@
             <button onclick="window.location.reload();" class="btn btn-sm btn-primary">
                 <i class="now-ui-icons loader_refresh"></i> Refresh
             </button>
+            <p><i style="color: grey">Secara Default menampilkan laporan hari ini, silahkan pilih range tanggal untuk custom</i></p>
         </div>
-        <i style="color: grey; font-size:90%" class="ml-3">Secara default menampilkan penjualan hari ini, silahkan filter tanggal untuk melakukan pencarian</i>
         <div class="card-body">
             <form action="{{ route('admin.report.index') }}">
             
@@ -33,18 +33,16 @@
             </div>
             </form>
             <form action="{{ route('admin.report.index') }}">
-                <input type="submit" value="Lihat hari ini" class="btn btn-warning text-white">
+                <input type="submit" value="Lihat Hari Ini" class="btn btn-warning text-white">
             </form>
-
             @if (Request::get('to_date'))
             <p>Total Pendapatan dari Tanggal <br>{{ Request::get('from_date') }} sampai {{ Request::get('to_date') }} =<b> @currency($total_earn)</b></p>
             @else
             <p>Total Pendapatan Hari Ini :<b> @currency($total_earn)</b></p>
             @endif
 
-
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable">
             <thead>
                 <th>No</th>
                 <th>Kode Transaksi</th>
@@ -76,9 +74,7 @@
                           <a href="#" data-target="#delete" data-toggle="modal" data-id="{{ $transaction->id }}"><i class="fas fa-trash"></i></a>
                       </td>
                   </tr>
-           
                   @endforeach
-
               </tbody>
             </table>
           </div>
@@ -102,7 +98,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus Laporan Transaksi ini ?
+                    Apakah Anda yakin ingin menghapus Laporan Transaksi ini ? Jika dihapus maka stok barang akan dikembalikan ke semula
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
