@@ -34,8 +34,11 @@ use App\Http\Controllers\Kasir\TransactionNewController as KasirTransactionNewCo
 |
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::group(['middleware' => "guest"], function () {
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
 
+Auth::routes();
 Auth::routes(['register' => false]);
 
 //BAGIAN ADMIN
