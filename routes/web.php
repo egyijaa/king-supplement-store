@@ -76,18 +76,27 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin'])->group(f
     Route::prefix('best-selling')->name('best-selling.')->group(function () {
         Route::get('', [BestSellingController::class, 'index'])->name('index');
     });
+    // Route::prefix('supply')->name('supply.')->group(function () {
+    //     Route::get('', [SupplyController::class, 'index'])->name('index');
+    //     Route::get('addProduct', [SupplyController::class, 'addProduct'])->name('addProduct');
+    //     Route::post('storeProduct', [SupplyController::class, 'storeProduct'])->name('storeProduct');
+    //     Route::post('storeNewProduct', [SupplyController::class, 'storeNewProduct'])->name('storeNewProduct');
+    //     Route::delete('deleteProduct/{id}', [SupplyController::class, 'deleteProduct'])->name('deleteProduct');
+    //     Route::post('storeSupply', [SupplyController::class, 'storeSupply'])->name('storeSupply');
+    //     Route::delete('delete', [SupplyController::class, 'delete'])->name('delete');
+    //     Route::get('show/{id}', [SupplyController::class, 'show'])->name('show');
+    //     Route::get('print/{id}', [SupplyController::class, 'print'])->name('print');
+    //     Route::post('storeNew', [SupplyController::class, 'storeNew'])->name('storeNew');
+    //     Route::put('update', [SupplyController::class, 'update'])->name('update');
+    // });
     Route::prefix('supply')->name('supply.')->group(function () {
         Route::get('', [SupplyController::class, 'index'])->name('index');
-        Route::get('addProduct', [SupplyController::class, 'addProduct'])->name('addProduct');
-        Route::post('storeProduct', [SupplyController::class, 'storeProduct'])->name('storeProduct');
-        Route::post('storeNewProduct', [SupplyController::class, 'storeNewProduct'])->name('storeNewProduct');
-        Route::delete('deleteProduct/{id}', [SupplyController::class, 'deleteProduct'])->name('deleteProduct');
-        Route::post('storeSupply', [SupplyController::class, 'storeSupply'])->name('storeSupply');
+        Route::post('store', [SupplyController::class, 'store'])->name('store');
+        Route::put('update', [SupplyController::class, 'update'])->name('update');
         Route::delete('delete', [SupplyController::class, 'delete'])->name('delete');
         Route::get('show/{id}', [SupplyController::class, 'show'])->name('show');
         Route::get('print/{id}', [SupplyController::class, 'print'])->name('print');
         Route::post('storeNew', [SupplyController::class, 'storeNew'])->name('storeNew');
-        Route::put('update', [SupplyController::class, 'update'])->name('update');
     });
     // Route::prefix('transaction')->name('transaction.')->group(function () {
     //     Route::get('', [TransactionController::class, 'index'])->name('index');
