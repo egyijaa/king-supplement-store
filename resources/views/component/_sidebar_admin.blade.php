@@ -78,6 +78,12 @@
               <p>Pembelian</p>
             </a>
           </li>
+          <li class="nav-item {{ request()->is('admin/best-selling') ?'active' : '' }}">
+            <a href="{{ route('admin.best-selling.index') }}">
+              <i class="now-ui-icons health_ambulance"></i>
+              <p>Barang Terlaris</p>
+            </a>
+          </li>
           <li class="nav-item {{ request()->is('admin/setting') ?'active' : '' }}">
             <a href="{{ route('admin.setting.index') }}">
               <i class="now-ui-icons ui-1_settings-gear-63"></i>
