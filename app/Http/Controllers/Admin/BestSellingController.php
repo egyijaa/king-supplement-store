@@ -27,11 +27,21 @@ class BestSellingController extends Controller
             $category = [];
             if ($fromDate || $toDate) {
                 if (empty($fromDate) || empty($toDate)) {
-                    $productTransactions = Product::with('productTransactions')->get();
+                    $productTransactions = Product::with(['productTransactions', 'category'])
+                        ->get()
+                        ->sortByDesc(function($product) {
+                            // Hitung total quantity setiap produk
+                            return $product->productTransactions->sum('quantity');
+                        }); 
                     toast('Harap Rentang Tanggal Keduanya diisi!')->autoClose(2000)->hideCloseButton();
                 }
                 else if ($fromDate > $toDate) {
-                    $productTransactions = Product::with('productTransactions')->get();
+                    $productTransactions = Product::with(['productTransactions', 'category'])
+                        ->get()
+                        ->sortByDesc(function($product) {
+                            // Hitung total quantity setiap produk
+                            return $product->productTransactions->sum('quantity');
+                        }); 
                     toast('Tanggal (Hingga) tidak boleh lebih kecil dari tanggal (Dari)!')->autoClose(2000)->hideCloseButton();
                 }
                 else {
@@ -43,7 +53,10 @@ class BestSellingController extends Controller
                             $toDatePlusOne = Carbon::parse($toDate)->addDay()->toDateString();
                             $query->whereBetween('created_at', [$fromDate, $toDatePlusOne]);
                         }
-                    })->get();
+                    })->get()->sortByDesc(function($product) {
+                        // Hitung total quantity setiap produk
+                        return $product->productTransactions->sum('quantity');
+                    }); 
                 }
                 foreach($productTransactions as $c){
                     if ($c->productTransactions->sum('quantity') > 0) {
@@ -65,7 +78,12 @@ class BestSellingController extends Controller
                  
              } 
              else {
-                $productTransactions = Product::with('productTransactions')->get();
+                $productTransactions = Product::with(['productTransactions', 'category'])
+                ->get()
+                ->sortByDesc(function($product) {
+                    // Hitung total quantity setiap produk
+                    return $product->productTransactions->sum('quantity');
+                });
                 foreach($productTransactions as $c){
                     if ($c->productTransactions->sum('quantity') > 0) {
                         array_push($totalProduct, $c->productTransactions->sum('quantity'));

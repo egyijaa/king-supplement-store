@@ -30,6 +30,9 @@
                     <table class="table table-bordered" id="dataTable">
                     <thead>
                       <th>
+                        Nomor
+                      </th>
+                      <th>
                         Barcode - Nama Barang
                       </th>
                       <th>Kategori Item</th>
@@ -43,6 +46,7 @@
                     <tbody>
                         @for ($i = 0; $i < $totalData; $i++)
                         <tr>
+                            <td>{{ $i+1 }}</td>
                             <td>{{ $result['code'][$i] }} - {{ $result['product'][$i] }}</td>
                             <td>{{ $result['category'][$i] }}</td>
                             {{-- <td>@currency($result['price'][$i])</td> --}}
