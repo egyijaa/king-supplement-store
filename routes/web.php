@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ProfitLossController;
 
 
 use App\Http\Controllers\Admin\BestSellingController;
+use App\Http\Controllers\Admin\HistoryProductController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\TransactionNewController;
 use App\Http\Controllers\Kasir\ProfilController as KasirProfilController;
@@ -79,6 +80,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin'])->group(f
     Route::prefix('best-selling')->name('best-selling.')->group(function () {
         Route::get('', [BestSellingController::class, 'index'])->name('index');
     });
+    Route::resource('history', HistoryProductController::class);
     // Route::prefix('supply')->name('supply.')->group(function () {
     //     Route::get('', [SupplyController::class, 'index'])->name('index');
     //     Route::get('addProduct', [SupplyController::class, 'addProduct'])->name('addProduct');

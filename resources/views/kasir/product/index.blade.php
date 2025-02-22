@@ -22,7 +22,10 @@
                         <th>Barcode</th>
                         <th>Nama</th>
                         <th>Kategori</th>
-                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>Harga 1</th>
+                        <th>Harga 3</th>
+                        <th>Harga 6</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,7 +38,10 @@
                       <td>{{ $product->product_code }}</td>
                       <td>{{ $product->name }}</td>
                       <td>{{ $product->category->name }}</td>
+                      <td>{{ $product->quantity }}</td>
                       <td>@currency($product->price)</td>
+                      <td>@currency($product->price3)</td>
+                      <td>@currency($product->price6)</td>
                     </tr>
                   @endforeach
                 </tbody>

@@ -29,4 +29,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductTransaction::class, 'product_id', 'id');
     }
+
+    public function histories()
+    {
+        return $this->hasMany(HistoryProduct::class, 'product_id');
+    }
 }

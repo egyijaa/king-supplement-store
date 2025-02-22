@@ -84,6 +84,12 @@
               <p>Barang Terlaris</p>
             </a>
           </li>
+          <li class="nav-item {{ request()->is('admin/history') ?'active' : '' }}">
+            <a href="{{ route('admin.history.index') }}">
+              <i class="now-ui-icons business_chart-bar-32"></i>
+              <p>Riwayat</p>
+            </a>
+          </li>
           <li class="nav-item {{ request()->is('admin/setting') ?'active' : '' }}">
             <a href="{{ route('admin.setting.index') }}">
               <i class="now-ui-icons ui-1_settings-gear-63"></i>

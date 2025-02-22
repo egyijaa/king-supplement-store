@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\ProductSupply;
 use App\Models\Supply;
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\ProductSupply;
+use App\Models\HistoryProduct;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class SupplyController extends Controller
 {
@@ -104,6 +105,20 @@ class SupplyController extends Controller
                 $produk = Product::find($productId);
                 $result = $produk->quantity + $request->quantity[$i];
                 $modal = $request->price[$i];
+
+                $history = new HistoryProduct();
+                $history->old_name = $produk->name;
+                $history->old_qty = $produk->quantity;
+                $history->update_qty = $produk->quantity + $request->quantity[$i];
+                $history->update_modal = $produk->modal;
+                $history->barang_masuk = $request->quantity[$i];
+                $history->supplier_name = $supplier_name;
+                $history->supplier_date = $supply_date;
+                $history->product_id = $produk->id;
+                $history->user_id = auth()->user()->id;
+                $history->status = 4;
+                $history->save();
+                
                 $produk->update(['quantity' => $result, 'modal' => $modal]);
                 ProductSupply::create([
                     'supply_id' => $supply->id,
@@ -112,6 +127,7 @@ class SupplyController extends Controller
                     'price' => $request->price[$i]
                 ]);
                 $total[] = $request->quantity[$i] * $request->price[$i];
+                
             } 
             //coba tambahkan total di Supply 
             $totalFinal = array_sum($total);
@@ -139,6 +155,24 @@ class SupplyController extends Controller
             $getProductId = ProductSupply::where('id', $productSupplies[$i])->first()->product_id;
             $produk = Product::find($getProductId);
             $quantity = $produk->quantity - $getQuantity;
+
+            $history = new HistoryProduct();
+            $history->old_code = $produk->product_code;
+            $history->old_name = $produk->name;
+            $history->old_category_id = $produk->category_id;
+            $history->old_qty = $produk->quantity;
+            $history->old_modal = $produk->modal;
+            $history->old_price = $produk->price;
+            $history->old_price3 = $produk->price3;
+            $history->old_price6 = $produk->price6;
+            $history->barang_keluar = $getQuantity;
+            $history->supplier_name = $supply->supplier_name;
+            $history->supplier_date = $supply->supply_date;
+            $history->product_id = $produk->id;
+            $history->user_id = auth()->user()->id;
+            $history->status = 7;
+            $history->save();
+
             $produk->update(['quantity' => $quantity]);
         }
         $supply->delete();
@@ -257,6 +291,23 @@ class SupplyController extends Controller
                     'price' => $request->price[$i]
                 ]);
                 $total[] = $request->quantity[$i] * $request->price[$i];
+
+                $history = new HistoryProduct();
+                $history->update_code = $product->product_code;
+                $history->update_name = $product->name;
+                $history->category_id = $product->category_id;
+                $history->update_qty = $product->quantity;
+                $history->update_modal = $product->modal;
+                $history->update_price = $product->price;
+                $history->update_price3 = $product->price3;
+                $history->update_price6 = $product->price6;
+                $history->barang_masuk = $product->quantity;
+                $history->supplier_name = $supplier_name;
+                $history->supplier_date = $supply_date;
+                $history->product_id = $product->id;
+                $history->user_id = auth()->user()->id;
+                $history->status = 3;
+                $history->save();
             } 
             //coba tambahkan total di Supply
             $totalFinal = array_sum($total);
