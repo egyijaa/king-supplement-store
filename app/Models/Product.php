@@ -10,6 +10,13 @@ class Product extends Model
     use HasFactory;
     
     protected $table = 'product';
+    protected $casts = [
+        'quantity' => 'double',
+        'price' => 'double',
+        'price3' => 'double',
+        'price6' => 'double',
+        'modal' => 'double',
+    ];
     protected $guarded = [];
     
     public function category()

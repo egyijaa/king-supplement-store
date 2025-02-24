@@ -9,6 +9,9 @@ class Supply extends Model
 {
     use HasFactory;
     protected $table = 'supply';
+    protected $casts = [
+        'total' => 'double',
+    ];
     protected $guarded = [];
     
     public function user()

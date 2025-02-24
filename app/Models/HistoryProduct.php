@@ -10,6 +10,22 @@ class HistoryProduct extends Model
     use HasFactory;
     
     protected $table = 'history_products';
+    protected $casts = [
+        'update_qty' => 'double',
+        'update_modal' => 'double',
+        'update_price' => 'double',
+        'update_price3' => 'double',
+        'update_price6' => 'double',
+        'update_in' => 'double',
+        'update_out' => 'double',
+        'old_qty' => 'double',
+        'old_modal' => 'double',
+        'old_price' => 'double',
+        'old_price3' => 'double',
+        'old_price6' => 'double',
+        'barang_masuk' => 'double',
+        'barang_keluar' => 'double',
+    ];
     protected $guarded = [];
     
     public function belong_product()

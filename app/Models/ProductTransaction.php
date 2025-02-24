@@ -9,6 +9,12 @@ class ProductTransaction extends Model
 {
     use HasFactory;
     protected $table = 'product_transaction';
+    protected $casts = [
+        'quantity' => 'double',
+        'price' => 'double',
+        'disc_rp' => 'double',
+        'disc_prc' => 'double',
+    ];
     protected $guarded = [];
     
     public function transaction()

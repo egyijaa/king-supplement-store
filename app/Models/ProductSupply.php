@@ -9,6 +9,11 @@ class ProductSupply extends Model
 {
     use HasFactory;
     protected $table = 'product_supply';
+    protected $casts = [
+        'quantity' => 'double',
+        'price' => 'double',
+        'total_price' => 'double',
+    ];
     protected $guarded = [];
     
     public function product()
