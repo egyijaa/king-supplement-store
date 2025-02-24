@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Kasir;
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\ProductTransaction;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\HistoryProduct;
+use App\Models\ProductTransaction;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class TransactionNewController extends Controller
 {
@@ -281,6 +282,18 @@ class TransactionNewController extends Controller
                     $getProductId = ProductTransaction::where('id', $cart[$i])->first()->product_id;
                     $produk = Product::find($getProductId);
                     $quantity = $produk->quantity - $getQuantity;
+
+                    $history = new HistoryProduct();
+                    $history->old_name = $produk->name;
+                    $history->old_category_id = $produk->category_id;
+                    $history->old_qty = $produk->quantity;
+                    $history->barang_keluar = $getQuantity;
+                    $history->update_qty = $produk->quantity - $getQuantity;
+                    $history->product_id = $produk->id;
+                    $history->user_id = auth()->user()->id;
+                    $history->status = 6;
+                    $history->save();
+                    
                     $produk->update(['quantity' => $quantity]);
                 }
 

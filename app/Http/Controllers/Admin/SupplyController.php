@@ -161,6 +161,7 @@ class SupplyController extends Controller
             $history->old_name = $produk->name;
             $history->old_category_id = $produk->category_id;
             $history->old_qty = $produk->quantity;
+            $history->update_qty = $produk->quantity - $getQuantity;
             $history->old_modal = $produk->modal;
             $history->old_price = $produk->price;
             $history->old_price3 = $produk->price3;
