@@ -108,7 +108,11 @@
                                                             @if (isset($product->update_name))
                                                                 {{ $product->update_name }}
                                                             @else
-                                                                -
+                                                                @if (isset($product->old_name))
+                                                                    {{ $product->old_name }}
+                                                                @else
+                                                                    -
+                                                                @endif
                                                             @endif
                                                         @endif
                                                     </td>
@@ -160,7 +164,11 @@
                                                             @if (isset($product->old_name))
                                                                 {{ $product->old_name }}
                                                             @else
-                                                                -
+                                                                @if (isset($product->update_name))
+                                                                    {{ $product->update_name }}
+                                                                @else
+                                                                    -
+                                                                @endif
                                                             @endif
                                                         @endif
                                                     </td>
@@ -211,7 +219,11 @@
                                                             @if (isset($product->old_name))
                                                                 {{ $product->old_name }}
                                                             @else
-                                                                -
+                                                                @if (isset($product->update_name))
+                                                                    {{ $product->update_name }}
+                                                                @else
+                                                                    -
+                                                                @endif
                                                             @endif
                                                         @endif
                                                     </td>
@@ -381,7 +393,11 @@
                                                         @if (isset($product->update_name))
                                                             {{ $product->update_name }}
                                                         @else
-                                                            -
+                                                            @if (isset($product->old_name))
+                                                                {{ $product->old_name }}
+                                                            @else
+                                                                -
+                                                            @endif
                                                         @endif
                                                     @endif
                                                 </td>
@@ -439,7 +455,11 @@
                                                         @if (isset($product->update_name))
                                                             {{ $product->update_name }}
                                                         @else
-                                                            -
+                                                            @if (isset($product->old_name))
+                                                                {{ $product->old_name }}
+                                                            @else
+                                                                -
+                                                            @endif
                                                         @endif
                                                     @endif
                                                 </td>
@@ -497,7 +517,11 @@
                                                         @if (isset($product->update_name))
                                                             {{ $product->update_name }}
                                                         @else
-                                                            -
+                                                            @if (isset($product->old_name))
+                                                                {{ $product->old_name }}
+                                                            @else
+                                                                -
+                                                            @endif
                                                         @endif
                                                     @endif
                                                 </td>
@@ -630,7 +654,11 @@
                                                     @if (isset($product->old_name))
                                                         {{ $product->old_name }}
                                                     @else
-                                                        -
+                                                        @if (isset($product->update_name))
+                                                            {{ $product->update_name }}
+                                                        @else
+                                                            -
+                                                        @endif
                                                     @endif
                                                 @endif
                                             </td>
@@ -655,7 +683,11 @@
                                                     @if (isset($product->old_name))
                                                         {{ $product->old_name }}
                                                     @else
-                                                        -
+                                                        @if (isset($product->update_name))
+                                                            {{ $product->update_name }}
+                                                        @else
+                                                            -
+                                                        @endif
                                                     @endif
                                                 @endif
                                             </td>
@@ -680,7 +712,11 @@
                                                     @if (isset($product->old_name))
                                                         {{ $product->old_name }}
                                                     @else
-                                                        -
+                                                        @if (isset($product->update_name))
+                                                            {{ $product->update_name }}
+                                                        @else
+                                                            -
+                                                        @endif
                                                     @endif
                                                 @endif
                                             </td>
