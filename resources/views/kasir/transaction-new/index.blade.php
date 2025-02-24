@@ -35,7 +35,7 @@
                             <select class="js-example-basic-single select2" name="get_product_code2" id="get_product_code2" style="width: 100% !important;">
                                 <option value="" selected></option>
                                 @foreach($products as $product)
-                                    <option value="{{ $product->product_code }}">{{ $product->name }} (@currency($product->price))</option>
+                                    <option value="{{ $product->product_code }}">{{ $product->product_code ." - " . $product->name }} (@currency($product->price))</option>
                                 @endforeach
                             </select>
                     </div>
