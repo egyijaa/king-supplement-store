@@ -217,7 +217,7 @@
                                                     </td>
                                                     <td class="text-center table-secondary"  style="border-left: 1px solid black; border-right: 1px solid black;">Sebelum</td>
                                                     <td class="text-center table-secondary"  style="border-left: 1px solid black; border-right: 1px solid black;">{!! isset($product->old_code) ? "<span class='badge badge-dark'>".$product->old_code."</span>" : "-" !!}</td>
-                                                    <td class="text-center table-secondary"  style="border-left: 1px solid black; border-right: 1px solid black;">{!! isset($product->old_name) ? "<span class='badge badge-dark'>".$product->old_name."</span>" : "-" !!}</td>
+                                                    <td class="text-center table-secondary"  style="border-left: 1px solid black; border-right: 1px solid black;">{!! isset($product->update_name) ? "<span class='badge badge-dark'>".$product->old_name."</span>" : "-" !!}</td>
                                                     <td class="text-center table-secondary"  style="border-left: 1px solid black; border-right: 1px solid black;">{!! isset($product->belong_old_category->name) ? "<span class='badge badge-dark'>".$product->belong_old_category->name."</span>" : "-" !!}</td>
                                                     <td class="text-center table-secondary"  style="border-left: 1px solid black; border-right: 1px solid black;">{{ isset($product->old_qty) ? $product->old_qty : "-" }}</td>
                                                     <td class="text-center table-secondary"  style="border-left: 1px solid black; border-right: 1px solid black;">
