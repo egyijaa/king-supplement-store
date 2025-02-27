@@ -37,6 +37,6 @@ class ReportController extends Controller
     {
         $transactionn = Transaction::find($id);
         $productTransactions = ProductTransaction::where('transaction_id', $transactionn->id)->get();
-        return view('kasir.report.report-newtest2', compact('transactionn','productTransactions'));
+        return view('kasir.report.report-new.test2', compact('transactionn','productTransactions'));
     }
 }
