@@ -61,8 +61,11 @@
                       </td>
                       <td>@currency($transaction->purchase_order)</td>
                       <td>{{ date('d M Y H:i:s', strtotime($transaction->created_at)) }}</td>
+                      <!--<td>-->
+                      <!--    <a href="{{ route('kasir.report.show', $transaction->id) }}"><i class="fas fa-eye"></i></a>-->
+                      <!--</td>-->
                       <td>
-                          <a href="{{ route('kasir.report.show', $transaction->id) }}"><i class="fas fa-eye"></i></a>
+                          <a href="{{ route('kasir.report.show', $transaction->id) }}">Detail</a>
                       </td>
                   </tr>
                   @php
