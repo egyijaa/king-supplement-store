@@ -16,52 +16,20 @@ class HistoryProductController extends Controller
         //
         $search_product = $request->get('search_product');
 
-        $search_barang_masuk = $request->get('search_barang_masuk');
-
-        $search_barang_keluar = $request->get('search_barang_keluar');
-
 
         if($search_product){
-            $products = HistoryProduct::where('update_code','like',"%".$search_product."%")
-                ->orWhere('old_code','like',"%".$search_product."%")
-                ->orWhere('update_name','like',"%".$search_product."%")
-                ->orWhere('old_name','like',"%".$search_product."%")
-                ->whereIn("status", [1])
-                ->paginate(10, ['*'], 'product_page');
+            $products = HistoryProduct::where('category_id','like',"%".$search_product."%")
+                ->orWhereHas('belong_product', function ($query) use ($search_product){
+                    $query->where('name', 'like', '%'.$search_product.'%')->orWhere('product_code','like',"%".$search_product."%");
+                })
+                ->paginate(10);
         } else{
-            $products = HistoryProduct::whereIn("status", [1])
-                ->orderBy('id', 'DESC')
-                ->paginate(10, ['*'], 'product_page');
-        }
-        
-        if($search_barang_masuk){
-            $barang_masuk = HistoryProduct::where('old_name','like',"%".$search_barang_masuk."%")
-                ->orWhere('old_qty','like',"%".$search_barang_masuk."%")
-                ->orWhere('update_qty','like',"%".$search_barang_masuk."%")
-                ->orWhere('barang_masuk','like',"%".$search_barang_masuk."%")
-                ->whereIn("status", [2, 3, 4])
-                ->paginate(10, ['*'], 'barang_masuk_page');
-        } else{
-            $barang_masuk = HistoryProduct::whereIn("status", [2, 3, 4])
-                ->orderBy('id', 'DESC')
-                ->paginate(10, ['*'], 'barang_masuk_page');
-        }
-        
-        if($search_barang_keluar){
-            $barang_keluar = HistoryProduct::where('old_name','like',"%".$search_barang_keluar."%")
-                ->orWhere('old_qty','like',"%".$search_barang_keluar."%")
-                ->orWhere('update_qty','like',"%".$search_barang_keluar."%")
-                ->orWhere('barang_keluar','like',"%".$search_barang_keluar."%")
-                ->whereIn("status", [5,6,7])
-                ->paginate(10, ['*'], 'barang_keluar_page');
-        } else{
-            $barang_keluar = HistoryProduct::whereIn("status", [5,6,7])
-                ->orderBy('id', 'DESC')
-                ->paginate(10, ['*'], 'barang_keluar_page');
+            $products = HistoryProduct::orderBy('id', 'DESC')
+                ->paginate(10);
         }
         
         // $categories = Category::all();
-        return view('admin.history.index', compact('products', 'barang_keluar', 'barang_masuk'));
+        return view('admin.history.index', compact('products'));
     }
 
     /**

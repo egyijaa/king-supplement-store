@@ -108,12 +108,13 @@ class SupplyController extends Controller
 
                 $history = new HistoryProduct();
                 $history->old_name = $produk->name;
+                $history->old_code = $produk->product_code;
                 $history->old_qty = $produk->quantity;
-                $history->update_qty = $produk->quantity + $request->quantity[$i];
-                $history->update_modal = $produk->modal;
                 $history->barang_masuk = $request->quantity[$i];
+                $history->update_qty = $produk->quantity + $request->quantity[$i];
                 $history->supplier_name = $supplier_name;
                 $history->supplier_date = $supply_date;
+                $history->category_id = $produk->category_id;
                 $history->product_id = $produk->id;
                 $history->user_id = auth()->user()->id;
                 $history->status = 4;
@@ -159,14 +160,9 @@ class SupplyController extends Controller
             $history = new HistoryProduct();
             $history->old_code = $produk->product_code;
             $history->old_name = $produk->name;
-            $history->old_category_id = $produk->category_id;
             $history->old_qty = $produk->quantity;
-            $history->update_qty = $produk->quantity - $getQuantity;
-            $history->old_modal = $produk->modal;
-            $history->old_price = $produk->price;
-            $history->old_price3 = $produk->price3;
-            $history->old_price6 = $produk->price6;
             $history->barang_keluar = $getQuantity;
+            $history->update_qty = $produk->quantity - $getQuantity;
             $history->supplier_name = $supply->supplier_name;
             $history->supplier_date = $supply->supply_date;
             $history->product_id = $produk->id;
@@ -294,18 +290,15 @@ class SupplyController extends Controller
                 $total[] = $request->quantity[$i] * $request->price[$i];
 
                 $history = new HistoryProduct();
-                $history->update_code = $product->product_code;
-                $history->update_name = $product->name;
-                $history->category_id = $product->category_id;
-                $history->update_qty = $product->quantity;
-                $history->update_modal = $product->modal;
-                $history->update_price = $product->price;
-                $history->update_price3 = $product->price3;
-                $history->update_price6 = $product->price6;
+                $history->old_code = $product->product_code;
+                $history->old_name = $product->name;
+                $history->old_qty = 0;
                 $history->barang_masuk = $product->quantity;
+                $history->update_qty = $product->quantity;
                 $history->supplier_name = $supplier_name;
                 $history->supplier_date = $supply_date;
                 $history->product_id = $product->id;
+                $history->category_id = $product->category_id;
                 $history->user_id = auth()->user()->id;
                 $history->status = 3;
                 $history->save();

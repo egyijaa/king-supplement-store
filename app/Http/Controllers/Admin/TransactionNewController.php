@@ -285,10 +285,11 @@ class TransactionNewController extends Controller
 
                     $history = new HistoryProduct();
                     $history->old_name = $produk->name;
-                    $history->old_category_id = $produk->category_id;
+                    $history->old_code = $produk->product_code;
                     $history->old_qty = $produk->quantity;
                     $history->barang_keluar = $getQuantity;
                     $history->update_qty = $produk->quantity - $getQuantity;
+                    $history->category_id = $produk->category_id;
                     $history->product_id = $produk->id;
                     $history->user_id = auth()->user()->id;
                     $history->status = 6;
