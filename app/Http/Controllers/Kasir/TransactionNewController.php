@@ -291,6 +291,7 @@ class TransactionNewController extends Controller
                     $history->update_qty = $produk->quantity - $getQuantity;
                     $history->category_id = $produk->category_id;
                     $history->product_id = $produk->id;
+                    $history->trans_id = $transaction->id;
                     $history->user_id = auth()->user()->id;
                     $history->status = 6;
                     $history->save();

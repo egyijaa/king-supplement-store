@@ -18,7 +18,8 @@ class HistoryProductController extends Controller
 
 
         if($search_product){
-            $products = HistoryProduct::where('category_id','like',"%".$search_product."%")
+            $products = HistoryProduct::where('old_code','like',"%".$search_product."%")
+                ->orWhere('old_name','like',"%".$search_product."%")
                 ->orWhereHas('belong_product', function ($query) use ($search_product){
                     $query->where('name', 'like', '%'.$search_product.'%')->orWhere('product_code','like',"%".$search_product."%");
                 })

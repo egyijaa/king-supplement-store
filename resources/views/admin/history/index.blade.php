@@ -107,13 +107,22 @@
                                 @elseif($product->status == 2)
                                     <span class="badge badge-success">Produk Baru</span>
                                 @elseif($product->status == 3)
-                                    <span class="badge badge-info">Pembelian Produk Baru</span>
+                                    <span class="badge badge-info">Pembelian Produk Baru</span> 
+                                    @if (isset($product->supply_id))
+                                    <a href="{{ route('admin.supply.show', $product->supply_id) }}"><i class="fas fa-eye"></i></a>
+                                    @endif
                                 @elseif($product->status == 4)
-                                    <span class="badge badge-secondary">Pembelian Baru</span>
+                                    <span class="badge badge-secondary">Pembelian Baru</span> 
+                                    @if (isset($product->supply_id))
+                                    <a href="{{ route('admin.supply.show', $product->supply_id) }}"><i class="fas fa-eye"></i></a>
+                                    @endif
                                 @elseif($product->status == 5)
                                     <span class="badge badge-danger">Barang Dihapus</span>
                                 @elseif($product->status == 6)
-                                    <span class="badge badge-warning">Transaksi Pembayaran</span>
+                                    <span class="badge badge-warning">Transaksi Pembayaran</span> 
+                                    @if (isset($product->trans_id))
+                                    <a href="{{ route('admin.report.show', $product->trans_id) }}"><i class="fas fa-eye"></i></a>
+                                    @endif
                                 @else
                                     <span class="badge badge-danger">Pembatalan Pembelian</span>
                                 @endif

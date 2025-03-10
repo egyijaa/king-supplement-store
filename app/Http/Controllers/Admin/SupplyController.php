@@ -116,6 +116,7 @@ class SupplyController extends Controller
                 $history->supplier_date = $supply_date;
                 $history->category_id = $produk->category_id;
                 $history->product_id = $produk->id;
+                $history->supply_id = $supply->id;
                 $history->user_id = auth()->user()->id;
                 $history->status = 4;
                 $history->save();
@@ -299,6 +300,7 @@ class SupplyController extends Controller
                 $history->supplier_date = $supply_date;
                 $history->product_id = $product->id;
                 $history->category_id = $product->category_id;
+                $history->supply_id = $supply->id;
                 $history->user_id = auth()->user()->id;
                 $history->status = 3;
                 $history->save();

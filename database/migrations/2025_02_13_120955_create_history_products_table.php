@@ -38,6 +38,8 @@ return new class extends Migration
             $table->tinyInteger('status')->nullable();
             $table->foreignId('product_id')->nullable()->constrained("product")->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained("users")->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('trans_id')->nullable()->constrained("transaction")->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('supply_id')->nullable()->constrained("supply")->cascadeOnUpdate()->nullOnDelete();
             $table->timestamps();
         });
     }
