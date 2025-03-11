@@ -47,4 +47,14 @@ class HistoryProduct extends Model
     {
         return $this->belongsTo(Category::class, 'old_category_id', 'id');
     }
+
+    public function belong_trans()
+    {
+        return $this->belongsTo(Transaction::class, 'trans_id', 'id');
+    }
+
+    public function belong_supply()
+    {
+        return $this->belongsTo(Supply::class, 'supply_id', 'id');
+    }
 }
