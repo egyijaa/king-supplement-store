@@ -303,6 +303,8 @@ class TransactionNewController extends Controller
                     'transaction_id' => $transaction->id,
                     'status' => '1',
                 ]);
+
+                HistoryProduct::where('created_at', '<', now()->subYear())->delete();
                 DB::commit();
             }
             toast('Pembayaran berhasil')->autoClose(2000)->hideCloseButton();

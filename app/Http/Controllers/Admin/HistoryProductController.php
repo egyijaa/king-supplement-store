@@ -22,11 +22,21 @@ class HistoryProductController extends Controller
                 ->orWhere('old_name','like',"%".$search_product."%")
                 ->orWhereHas('belong_product', function ($query) use ($search_product){
                     $query->where('name', 'like', '%'.$search_product.'%')->orWhere('product_code','like',"%".$search_product."%");
-                })
+                })->orderBy('id', 'DESC')
                 ->paginate(10);
         } else{
-            $products = HistoryProduct::orderBy('id', 'DESC')
-                ->paginate(10);
+            $subquery = HistoryProduct::select('id')
+            ->orderBy('id', 'DESC')
+            ->limit(100);
+
+            $products = HistoryProduct::joinSub($subquery, 'limited', function ($join) {
+                $join->on('history_products.id', '=', 'limited.id');
+            })
+            ->orderBy('history_products.id', 'DESC')
+            ->paginate(10);
+
+
+
         }
         
         // $categories = Category::all();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\Supply;
 use App\Models\Product;
 use App\Models\Category;
@@ -136,6 +137,9 @@ class SupplyController extends Controller
             $s = Supply::find($supply->id);
             $s->total = $totalFinal;
             $s->save();
+
+            HistoryProduct::where('created_at', '<', now()->subYear())->delete();
+            
             DB::commit();
             toast('Data Pembelian berhasil ditambahkan')->autoClose(2000)->hideCloseButton();
             return redirect()->back();
@@ -170,6 +174,8 @@ class SupplyController extends Controller
             $history->user_id = auth()->user()->id;
             $history->status = 7;
             $history->save();
+
+            HistoryProduct::where('created_at', '<', now()->subYear())->delete();
 
             $produk->update(['quantity' => $quantity]);
         }
@@ -310,6 +316,8 @@ class SupplyController extends Controller
             $s = Supply::find($supply->id);
             $s->total = $totalFinal;
             $s->save();
+
+            HistoryProduct::where('created_at', '<', now()->subYear())->delete();
             DB::commit();
             toast('Data Pembelian berhasil ditambahkan')->autoClose(2000)->hideCloseButton();
             return redirect()->back();
