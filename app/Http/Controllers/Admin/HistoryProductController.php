@@ -23,7 +23,7 @@ class HistoryProductController extends Controller
                 ->orWhereHas('belong_product', function ($query) use ($search_product){
                     $query->where('name', 'like', '%'.$search_product.'%')->orWhere('product_code','like',"%".$search_product."%");
                 })->orderBy('id', 'DESC')
-                ->paginate(10);
+                ->get();
         } else{
             $subquery = HistoryProduct::select('id')
             ->orderBy('id', 'DESC')
@@ -33,7 +33,7 @@ class HistoryProductController extends Controller
                 $join->on('history_products.id', '=', 'limited.id');
             })
             ->orderBy('history_products.id', 'DESC')
-            ->paginate(10);
+            ->get();
 
 
 

@@ -29,7 +29,7 @@
                     <input type="submit" value="Lihat Semua Data" class="btn btn-warning text-white">
                 </form>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="dataTableHistory">
                     <thead class=" text-primary">
                         <tr>
                             <td class="text-center">
@@ -73,7 +73,8 @@
                             ?>
                         @foreach($products as $key => $product)
                         <tr>
-                            <td class="text-center">{{ $products->firstItem() + $key }}</td>
+                            {{-- <td class="text-center">{{ $products->firstItem() + $key }}</td> --}}
+                            <td class="text-center">{{ $i++ }}</td>
                             <td>
                                 @if (isset($product->belong_product->name))
                                     {{ $product->belong_product->name }}
@@ -134,7 +135,6 @@
                         @endforeach
                     </tbody>
                     </table>
-                    {{  $products->appends(request()->input())->links()}}
             </div>
         </div>
     </div>
@@ -145,6 +145,9 @@
 @push('scripts')
 <script>
     $(document).ready(function(){
+        $('#dataTableHistory').DataTable({
+            searching: false
+        });
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
