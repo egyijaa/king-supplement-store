@@ -4,9 +4,18 @@
 <div class="row">
     <div class="col-md-12">
       <div class="card">
-        <div class="card-header justify-content-between d-flex d-inline">
-          <h4 class="card-title"> Data Produk</h4>
-          <a href="#" data-toggle="modal" data-target="#tambah"><i class="btn btn-sm btn-primary shadow-sm">+ Tambah</i></a>
+        <div class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
+            <h4 class="card-title mb-0 text-nowrap">Data Produk</h4>
+            
+            <div class="d-flex flex-wrap gap-2 w-100 w-sm-auto justify-content-start justify-content-sm-end align-items-center">
+                <a href="#" class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#tambah">
+                    <i class="fas fa-plus mr-1"></i> Tambah
+                </a>
+                
+                <a href="{{ route('admin.product.export') }}" target="_blank" class="btn btn-sm btn-success shadow-sm">
+                    <i class="fas fa-file-excel mr-1"></i> Export
+                </a>
+            </div>
         </div>
         <div class="ml-3">
             <button onclick="window.location.reload();" class="btn btn-sm btn-primary">

@@ -4,8 +4,14 @@
 <div class="row">
     <div class="col-md-12">
       <div class="card">
-        <div class="card-header justify-content-between d-flex d-inline">
-          <h4 class="card-title"> Laporan Transaksi</h4>
+        <div class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
+            <h4 class="card-title mb-0 text-nowrap">Laporan Transaksi</h4>
+            
+            <div class="d-flex flex-wrap gap-2 w-100 w-sm-auto justify-content-start justify-content-sm-end align-items-center">
+                <a href="#" onclick="doExport(event)" target="_blank" class="btn btn-sm btn-success shadow-sm">
+                    <i class="fas fa-file-excel mr-1"></i> Export
+                </a>
+            </div>
         </div>
         <div class="ml-3">
             <button onclick="window.location.reload();" class="btn btn-sm btn-primary">
@@ -59,13 +65,15 @@
                       <td>{{ $transaction->transaction_code }} <div style="font-size: 75%">{{ $transaction->user->name }}</div></td>
                       <td>{{ $transaction->method }}</td>
                       <td>
-                        @if ($transaction->customer_name != null or $transaction->account_number != null)
-                          {{ $transaction->payment_method }} <br>
-                          {{ $transaction->customer_name ?? '' }} 
-                         - {{ $transaction->account_number ?? '' }}
-                          @else
-                          Tunai
-                        @endif
+                        @php
+                            if (empty($transaction->payment_method) && $transaction->method == 'offline') {
+                                $method = 'Tunai';
+                            }
+                            else {
+                                $method = 'Transfer';
+                            }
+                        @endphp
+                        {{ !empty($transaction->payment_method) ? $transaction->payment_method : $method }}
                       </td>
                       <td>@currency($transaction->purchase_order)</td>
                       <td>{{ date('d M Y H:i:s', strtotime($transaction->created_at)) }}</td>
@@ -117,5 +125,27 @@
         console.log(id);
         $('#delete').find('input[name="id"]').val(id);
     });
+
+    function doExport(event) {
+        // Mencegah link standar berjalan langsung
+        event.preventDefault();
+        
+        // 1. Ambil nilai tanggal dari input HTML
+        const fromDate = document.getElementById('from_date').value;
+        const toDate = document.getElementById('to_date').value;
+        
+        // 2. Tentukan base URL route export Anda
+        let exportUrl = "{{ route('admin.report.export') }}";
+        
+        // 3. Jika tanggal terisi, buat query string parameternya
+        if (fromDate && toDate) {
+            exportUrl += `?from_date=${fromDate}&to_date=${toDate}`;
+        } else if (fromDate) {
+            exportUrl += `?from_date=${fromDate}`;
+        }
+        
+        // 4. Buka URL yang sudah lengkap di tab baru
+        window.open(exportUrl, '_blank');
+    }
 </script>
 @endpush

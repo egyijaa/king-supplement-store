@@ -73,6 +73,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin'])->group(f
         Route::put('update', [ProductController::class, 'update'])->name('update');
         Route::delete('delete', [ProductController::class, 'delete'])->name('delete');
         Route::put('cetak-barcode', [ProductController::class, 'print'])->name('printBarcode');
+        Route::get('export-product', [ProductController::class, 'export'])->name('export');
     });
     Route::prefix('profit-loss')->name('profit-loss.')->group(function () {
         Route::get('', [ProfitLossController::class, 'index'])->name('index');
@@ -143,6 +144,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin'])->group(f
         Route::get('show/{id}', [ReportController::class, 'show'])->name('show');
         Route::get('cetak-nota/{id}', [ReportController::class, 'print'])->name('print'); //utk print struk penjualan
         Route::delete('delete', [ReportController::class, 'delete'])->name('delete');
+        Route::get('export-report', [ReportController::class, 'export'])->name('export');
     });
 
     Route::prefix('setting')->name('setting.')->group(function () {

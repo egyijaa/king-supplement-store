@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ProductExport;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\HistoryProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -148,5 +150,15 @@ class ProductController extends Controller
 
         $product->delete();
         return redirect()->back();
+    }
+
+    public function export(Request $request)
+    {
+        $search = $request->get('search');
+        $filterInitial = $request->get('filter_initial');
+
+        $data = Product::orderBy('id', 'DESC')->get();
+        
+        return Excel::download(new ProductExport($data), 'Products.xlsx');
     }
 }

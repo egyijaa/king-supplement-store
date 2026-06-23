@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ReportExport;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\ProductTransaction;
 use App\Models\Transaction;
-use App\Models\Product;
 use Facade\Ignition\Tabs\Tab;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -67,5 +69,36 @@ class ReportController extends Controller
         toast('Laporan transaksi berhasil dihapus')->autoClose(2000)->hideCloseButton();
         return redirect()->back();
 
+    }
+
+    public function export(Request $request)
+    {
+        $fromDate = $request->get('from_date');
+        $toDate = $request->get('to_date');
+        if ($fromDate){
+            $transactions = Transaction::whereRaw(
+                "(created_at >= ? AND created_at <= ?)", 
+                [
+                   $fromDate ." 00:00:00", 
+                   $toDate ." 23:59:59"
+                ]
+              )->orderBy('id', 'DESC')->get();
+
+            $total_earn = Transaction::whereRaw(
+                "(created_at >= ? AND created_at <= ?)", 
+                [
+                   $fromDate ." 00:00:00", 
+                   $toDate ." 23:59:59"
+                ]
+              )->sum('purchase_order');
+        }
+        else {
+            $fromDate = date('Y-m-d');
+            $toDate = date('Y-m-d');
+            $transactions = Transaction::whereDate('created_at', date('Y-m-d'))->orderBy('id', 'DESC')->get();
+            $total_earn = Transaction::whereDate('created_at', date('Y-m-d'))->sum('purchase_order');
+        }
+        
+        return Excel::download(new ReportExport($transactions, $total_earn, $fromDate, $toDate), 'Laporan Transaksi.xlsx');
     }
 }
